@@ -1,13 +1,3 @@
----
-title: Race
-description: Explains what is race in Golang
-published: true
-date: 2023-10-21T19:13:57.528Z
-tags: golang, go, race
-editor: markdown
-dateCreated: 2023-09-15T23:17:09.949Z
----
-
 # Race Condition
 
 A **race condition** is an error that can occur in concurrently running programs when two or more independently executing processess have access to a shared resource, and at least one of them modifies it without proper synchronization, resulting in unexpected behavior. The outcome of the program depends on the timing of a process execution, making it unpredictable and difficult to reproduce potential issues. For example, improper use of a **mutex** can lead to such an error.
