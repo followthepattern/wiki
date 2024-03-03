@@ -1,9 +1,28 @@
 # Another Page
 
-```js filename="demo.js" {3} copy
+```js filename="demo.js" {1} copy
 let a = 1;
 
 console.log(a);
+```
+
+```go {1} copy
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	ch := make(chan string)
+
+	go func() {
+		ch <- "Learn coding more efficiently"
+	}()
+
+	fmt.Println(<-ch)
+	fmt.Println("Follow The Pattern")
+}
 ```
 
 ## Component
