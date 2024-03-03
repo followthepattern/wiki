@@ -1,0 +1,128 @@
+---
+title: WaitGroup
+description: Details about WaitGroup
+published: true
+date: 2023-10-21T16:44:53.757Z
+tags: golang, go, sync, waitgroup
+editor: markdown
+dateCreated: 2023-09-15T23:05:04.759Z
+---
+
+# WaitGroup
+
+In concurrent programs, there are situations where you need to wait for the results of multiple independently running processes. In the context of Golang, this often means waiting for multiple **goroutines** to finish. For a single process, you can simply use a "done" **channel**, such as `context.Done`. However, the `sync.WaitGroup` provides an excellent solution for coordinating numerous goroutines.
+
+Essentially, `sync.WaitGroup` is a **concurrent safe** counter that you can use to track how many goroutines have been created and how many have completed.
+
+`WaitGroup` has three important methods. The `Add` method increments the counter by an integer, `Done` decrements the counter by one, and `Wait` blocks the calling thread until the `WaitGroup` counter reaches zero.
+
+Here's a simple example where an anonymous function is executed within a goroutine, and the main thread waits for its completion using `WaitGroup`. The `wg` variable is incremented by calling the `Add` function, which is then decremented by one using `Done`, it gets called, when the goroutine completes.
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		fmt.Println("Hello Follow The Pattern")
+		time.Sleep(2 * time.Second)
+		wg.Done()
+	}()
+	wg.Wait()
+	fmt.Println("Program finished!")
+}
+```
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/x1JvuUbM3bO?v=goprev).
+
+The previous simple example can also be solved using channels, but the following code demonstrates a scenario, which a `WaitGroup` can solve easier, where numerous goroutines need to be coordinated simultaneously. You need to ensure proper maintenance of the `WaitGroup` counter by calling `Done` at the right place.
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func main() {
+	var wait sync.WaitGroup
+
+	numberOfRoutines := 5
+	wait.Add(numberOfRoutines)
+
+	for i := 0; i < numberOfRoutines; i++ {
+		go func(ID int) {
+			fmt.Printf("ID:%d: Hello FP routine!\n", ID)
+			wait.Done()
+		}(i)
+	}
+	wait.Wait()
+}
+```
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/fftXa_Y6Hkc?v=goprev).
+
+The `ID` values may not necessarily be printed in ascending order because the invocation of goroutines does not necessarily happen in the same order as the command to create the goroutine.
+
+In the following code snippet, the `Wait` method is not called, so it won't block the main goroutine, which may result unfinished processes.
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		fmt.Println("Hello Follow The Pattern")
+		time.Sleep(2 * time.Second)
+		wg.Done()
+	}()
+	// wg.Wait() won't block the main thread
+	fmt.Println("Program finished!")
+}
+```
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/o0ULBLRWaUA?v=goprev).
+
+The following program will result in an error message: *"all goroutines are asleep - deadlock!"* because the `Done` method is not called within the anonymous function, and the `Wait` method waits indefinitely until the counter reaches zero.
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		fmt.Println("Hello Follow The Pattern")
+		time.Sleep(2 * time.Second)
+		// wg.Done() 
+	}()
+	wg.Wait() // deadlock!
+	fmt.Println("Program finished!")
+}
+```
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/-N0Z0KldmNx?v=goprev).

@@ -1,0 +1,163 @@
+---
+title: Interface
+description: Explains how the interface is used in Golang
+published: true
+date: 2023-11-19T15:45:47.183Z
+tags: golang, go, interface
+editor: markdown
+dateCreated: 2023-09-04T15:10:26.443Z
+---
+
+# Interface
+
+In Go (Golang) programming language, an interface is a collection of method signatures with a unique name. You cannot create instances of interfaces, but you can assign values of types that implement the methods defined in the interface. The default value for an interface is `nil` or `nil interface` because you cannot assign any other type's `nil` to it.
+
+**General Syntax**
+
+```go
+type [INTERFACE NAME] interface {
+    [METHOD NAME] ([ARGUMENTS...]) ([RETURN TYPES...])
+    // ...
+}
+```
+
+One of the most popular interfaces in Go is the `error` interface, which is used for organizing, passing, and handling errors.
+
+## Defining an Interface
+An interface definition essentially describes what behavior it expects from a type. In the example below, the `Shape` interface expects an `Area` function with no parameters and `float64` return type.
+
+```go
+type Shape interface {
+    Area() float64
+}
+```
+
+Any type can be assigned to the `Shape` interface as long as it correctly implements the `Area` method.
+
+In the following complete example, you can see the `Database` interface and the implementing `PSQL` type. The `Database` interface expects three methods, which the `PSQL` type satisfies.
+
+The usage of these types is demonstrated in the `main` function. It shows that you can create various database APIs that implements the `Database` interface, allowing the caller to interact with them in a uniform way. This decouples the `PSQL` type from the calling code. Moreover, during testing, you can "mock" the interface, making it suitable for unit testing.
+
+```go
+package main
+
+import (
+    "fmt"
+)
+
+type Database interface {
+    Connect() error
+    Query(query string) ([]byte, error)
+    Close() error
+}
+
+type PSQL struct {
+    // implementation details
+}
+
+func (m *PSQL) Connect() error {
+    fmt.Println("Connecting to PSQL database...")
+    return nil
+}
+
+func (m *PSQL) Query(query string) ([]byte, error) {
+    fmt.Printf("Executing query \"%s\" on PSQL database...\n", query)
+    return []byte("result"), nil
+}
+
+func (m *PSQL) Close() error {
+    fmt.Println("Closing PSQL database connection...")
+    return nil
+}
+
+func main() {
+    db := &PSQL{}
+    err := db.Connect()
+    if err != nil {
+        fmt.Println("Error connecting to database:", err)
+        return
+    }
+
+    defer db.Close()
+
+    result, err := db.Query("SELECT * FROM users")
+    if err != nil {
+        fmt.Println("Error executing query:", err)
+        return
+    }
+
+    fmt.Println("Result:", string(result))
+}
+```
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/JVWNyNsUFDN).
+
+## Empty Interface
+The empty interface, denoted as `interface{}`, is a special interface that doesn't specify any method signatures. It allows you to assign values of any type to it. In a sense, you can think of every type as implicitly implementing the empty interface. There is a built-in alias for empty interface, called `any`.
+
+You can use the empty interface to work around Go's strong typing when necessary.
+
+```go
+func printValue(obj any) {
+    fmt.Println(obj)
+}
+
+func main() {
+    printValue(42)
+    printValue("Hello, World!")
+    printValue([]int{1, 2, 3})
+}
+```
+
+In the above example, the `printValue` function takes an empty interface as a parameter, allowing you to pass values of different types to it.
+
+### Type assertion
+Type assertion in Golang is a mechanism used to extract the underlying value of an interface variable. It's commonly used when you have a variable of interface type and you need to retrieve its dynamic value.
+
+#### Comma-ok idiom
+When you use `value, ok := obj.(Type)`, if the assertion is true, `ok` becomes true and value gets the underlying value. If the assertion is false, `ok` becomes false and value gets the zero value of the asserted type.
+
+This is a safe way to perform type assertion.
+
+```go
+package main
+
+import "fmt"
+
+type User struct {
+	Name string
+}
+
+func (u User) GetName() string {
+	return u.Name
+}
+
+func main() {
+	var obj interface{} = User{Name: "Alex"}
+
+	if u, ok := obj.(interface{ GetName() string }); ok {
+		fmt.Println(u.GetName())
+	} else {
+		fmt.Println("given object doesn't implement GetName() method")
+	}
+}
+```
+
+#### Unsafe type assertion
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	var obj interface{}
+
+	value := obj.(string)
+
+	fmt.Println("Value", value)
+}
+```
+The code directly asserts `obj` as a `string` without checking if it's actually of that type. Since `obj` is an empty interface and hasn't been assigned any value, this assertion is incorrect.
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/hhK5LxatQqx)

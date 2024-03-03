@@ -1,0 +1,54 @@
+---
+title: Mutex
+description: Detailed explanation of Golang mutex
+published: true
+date: 2023-10-21T17:17:29.066Z
+tags: golang, go, mutex
+editor: markdown
+dateCreated: 2023-09-15T23:07:19.872Z
+---
+
+# Mutex
+
+In a multithreaded application, you may encounter the problem of multiple processess try to modify a variable at the exact same time. This can lead to incorrect behavior, and the phenomenon is known as a **race condition**.
+
+You can use `sync.Mutex` to lock a variable that multiple goroutines want to modify concurrently, preventing other goroutine from accessing it for a short period to ensure the modification happens safely. After the necessary changes, you can release the lock, allowing other concurrently running processes to access it again.
+
+While this approach is widely used in other languages, Go recommends using **channels** for synchronization. However, in some cases, using a **Mutex** can be simpler. A prime example is implementing a **Counter**, which you can see in practise below:
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+type Counter struct {
+	sync.Mutex
+	value int
+}
+
+func main() {
+	counter := Counter{}
+	for i := 0; i < 10; i++ {
+		go func(i int) {
+			counter.Lock()
+			counter.value++
+			defer counter.Unlock()
+		}(i)
+	}
+	time.Sleep(time.Second)
+	counter.Lock()
+	defer counter.Unlock()
+
+	fmt.Println("counter", counter.value)
+}
+```
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/RzkGyvSaRUp?v=goprev).
+
+In the example above, the `Counter` type embeds the `sync.Mutex` type, which allows the `counter` variable to have `Lock` and `Unlock` methods. These methods help block modifications by other goroutines while one goroutine is making changes.
+
+Inside a loop, multiple goroutines are executed, each calling anonymous functions that increment the counter's value by one. Before incrementing the value, the `Lock` method locks the `counter` object from other goroutine, and after the value is incremented, the `Unlock` method releases the lock. Finally, the program prints the value on the main goroutine.

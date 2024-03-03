@@ -1,0 +1,148 @@
+---
+title: Get Started
+description: What is Golang?
+published: true
+date: 2023-08-24T18:00:13.900Z
+tags: golang, install, go
+editor: markdown
+dateCreated: 2023-08-23T21:34:49.208Z
+---
+
+# What is the Go Programming Language?
+
+Go is a strongly static, compiled programming language, and an open-source project that first appeared in 2009. It was designed by Robert Griesemer, Rob Pike, and Ken Thompson at Google. Its syntax is similar to C, but it includes memory management. For practical reasons, it's often referred to as Golang, but its official name is Go.
+
+## Why was it created?
+
+Go is a programming language designed to meet the needs of the present. Not everything new is necessarily good, but when a programming language is intentionally designed for the environment most of us use, it comes with numerous advantages. It can be compiled on almost any operating system. It's memory-efficient, scalable, and can rapidly create fast cloud-based applications. You can build a complete web application with it or a simple utility program that manipulates a database, among other things. Due to its simplicity, it's easy to learn quickly, and it's also well-documented. Additionally, it comes with built-in testing and profiling tools, the importance of which cannot be overstated. It's like a Swiss Army knife, but without unnecessary adornments that have accumulated on other languages over the past decades.
+
+The Go package is pre-installed on the coding platform; these steps don't need to be performed there. However, if someone wants to install the Go environment on their own machine, they can do so by following the steps below.
+
+## Installation
+
+As a first step, you need to download the necessary binary or installer package for your operating system from [here](https://go.dev/dl/).
+
+Different operating systems require different installation steps. The descriptions for the three most important operating systems can be found in the following table.
+
+## Tabs {.tabset}
+### Linux
+
+By running the following command, you will delete the contents of the `/usr/local/go` directory if it exists. The content of the package downloaded from the link above should also be copied to the `/usr/local/go` location. If the package was downloaded to the `/user/local` location, the following command will execute the necessary steps:
+```bash
+rm -rf /usr/local/go && tar -C /usr/local -xzf go1.18.1.linux-amd64.tar.gz
+```
+(You might need to run the command as `root`).
+
+It's not advisable to extract the package into an existing `/usr/local/go` folder, as it might create a non-working Go installation.
+
+The value `/usr/local/go/bin` needs to be added to the `PATH` environment variable.
+This can be done in multiple ways. For user-level installations, you should add the following line to the `$HOME/.profile` file:
+
+```bash
+export PATH=$PATH:/usr/local/go/bin
+```
+The changes might not take effect immediately in the terminal, so it's recommended to either restart your computer or use the `source` command to invoke the `$HOME/.profile` file.
+
+To verify the correct installation and version, you should run the following command:
+```bash
+go version
+```
+
+### Mac
+
+You need to open the downloaded file and follow its instructions for installation.
+
+The installer will create the Go package in the `/usr/local/go` location. The installer should add the `/usr/local/go/bin` value to the `PATH` environment variable. You might need to restart the Terminal for the changes to take effect.
+
+To verify the correct installation and version, you should run the following command in the Terminal:
+```bash
+go version
+```
+
+### Windows
+
+You need to open the downloaded MSI file and follow the commands to install Go.
+
+By default, the installer will install the Go package in the Program Files or Program Files (x86) locations. You can change the installation location during the installation process. After that, it's a good idea to close and reopen the command prompt to ensure the changes take effect.
+
+To verify the correct installation and version, you should run the following command in the command prompt:
+```cmd
+go version
+```
+
+## Go Project Structure
+
+Go programs are organized into packages. A package is a collection of source files in the same directory. Functions, types, variables, and constants defined in a specific package can be referenced from any source file within that package.
+
+A module is a collection of Go packages that are compiled together. In general, a Go repository contains a single module located at the root of the repository. The module that contains packages has a `go.mod` file, which defines the module path, acting as a prefix when referencing packages within it. Additionally, the `go.mod` file specifies the module's dependencies on other modules and their minimum version numbers, as well as the minimum Go version required to build the module.
+
+### Creating Your First Go Program
+You need to create an empty folder in any location you prefer. Then, run the `go mod init` command with the correct parameters:
+
+```bash
+mkdir followthepattern
+cd followthepattern
+go mod init followthepattern/example
+```
+
+After running these commands, the project folder and the `go.mod` file will be created.
+
+```
+module followthepattern/example
+
+go 1.21
+```
+
+Next, you can create a Go source file, which will contain the actual application code. Name the file `main.go` and place it in the root of the project folder. The first statement of every `.go` source file must be the package definition. Every executable command must be located in the `main` package.
+
+The example below is a simple Go program that prints "Hello, Follow The Pattern!" The `import` keyword is used to reference other packages, even from other modules.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Hello, Follow The Pattern!")
+}
+```
+
+After creating the source file, you can build the project with the following command:
+```bash
+go build followthepattern/example
+```
+
+This will create the binary within the project folder. You can use the `go install` command to install the binary to `$HOME/go/bin/followthepattern` or, in the case of Windows, `%USERPROFILE%\go\bin\followthepattern.exe`.
+
+You can also reference packages from other modules just like you would reference local packages. Modify the `main.go` file as follows:
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/google/uuid"
+)
+
+func main() {
+	uuidString := uuid.New().String()
+	fmt.Printf("Hello, Follow The Pattern! %s \n", uuidString)
+}
+```
+
+After building, the content of the `go.mod` file will change as follows:
+
+```
+module followthepattern/example
+
+go 1.21
+
+require github.com/google/uuid v1.3.0
+```
+
+An external module reference has been added to the file, explicitly defining the module name and its version used during the build. Additionally, a new file named `go.sum` will be created with the following lines:
+
+```
+github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
+github.com/google/uuid v1.3.0/go.mod h1:TIyPZe

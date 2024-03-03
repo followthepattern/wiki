@@ -1,0 +1,52 @@
+---
+title: Module and Package
+description: Explains how the modules and packages work in Golang
+published: true
+date: 2023-09-13T10:05:01.029Z
+tags: golang, modules, packages, package, module
+editor: markdown
+dateCreated: 2023-09-04T15:35:33.342Z
+---
+
+# Package
+In Go (Golang), programs are organized into packages. A package is a collection of source files located in the same directory. Functions, types, variables, and constants defined within a specific package can be referenced from any source file within that package.
+
+# Module
+
+A module is a collection of multiple Go packages that are built together. Typically, a Go repository contains a single module, located at the root of the repository. The module that contains the packages also has a `go.mod` file, which defines the module path. The module path acts as a prefix when referencing packages. Additionally, the `go.mod` file specifies the module's dependencies on other modules, their minimum version numbers, and the minimum Go version required to build the module.
+
+## Public and Private
+A package is the smallest unit that can differentiate between public and private access. Every type, function, or constant definition can be exported to make it public, allowing other packages to access it, or it can be declared as private. The way to specify accessibility is by using capitalization. Definitions that start with an uppercase letter are public, while lowercase definitions indicate private access.
+
+`models/user.go`
+```go
+package models
+
+import "time"
+
+type User struct {
+	Name         string    // public
+	creationDate time.Time // private
+}
+
+func NewUser(name string) User {
+	return User{
+		Name:         name,
+		creationDate: time.Now(),
+	}
+}
+```
+
+In the code above, the `User` type, `User.Name` field, and `NewUser` function are public, whereas `User.creationDate` is private.
+
+`main.go`
+```go
+func main() {
+	user := models.NewUser("X Jakab")
+	fmt.Println(user)
+	user.Name = "Y Jakab"
+	// user.creationDate = time.Now() // creationDate is private
+}
+```
+
+The `user.creationDate` field cannot be modified outside the `models` package. Only functions or methods defined within the `models` package can modify it.

@@ -1,0 +1,68 @@
+---
+title: Primitive Types
+description: Go programming language offers the similar predeclared types like many other language
+published: true
+date: 2023-10-01T14:34:58.162Z
+tags: golang, primitives, primitive types, predeclared types, built-in types
+editor: markdown
+dateCreated: 2023-08-24T19:42:23.323Z
+---
+
+# Primitive Types
+The Go programming language features a variety of primitive types, often referred to as predeclared types. Similar types can be found in other languages, such as `boolean`, `integer`, `float`, and `string`.
+
+Some [examples](https://goplay.followthepattern.net/snippet/2nv-xez21aT).
+
+## Boolean
+The boolean type, which takes logical values, has only two possible values: `true` and `false`. For instance, conditions in `if` and `for` statements are logical values, and the `==` and `<` comparison operators also yield logical values.
+
+| Type | Description | Default Value | Example |
+| - | - | - | - |
+| `bool` | boolean type | `false` | isVisible := true
+
+For more examples about boolean types, see [here](https://goplay.followthepattern.net/snippet/6pwVMW2tpGa).
+
+## Numeric Types
+Golang provides several numeric data types for programmers to work with, allowing storage of integers and floating-point numbers of varying sizes and precision, facilitating flexible handling of numeric data.
+
+| Type | Description | Default Value | Example |
+| - | - | - | - |
+| `int` | integer of at least 32 bits | `0` | index := 1
+| `int8` | 8-bit integer | `0` | var index int8 = 127
+| `int16` | 16-bit integer | `0` | var index int16 = 32767
+| `int32` | 32-bit integer | `0` | var index int32 = 2147483647
+| `int64` | 64-bit integer | `0` | var index int64 = 9223372036854775807
+| `uint` | unsigned integer of at least 32 bits | `0` | index := 1
+| `uint8` | 8-bit unsigned integer | `0` | var index uint8 = 255
+| `uint16` | 16-bit unsigned integer | `0` | var index uint16 = 65535
+| `uint32` | 32-bit unsigned integer | `0` | var index uint32 = 4294967295
+| `uint64` | 64-bit unsigned integer | `0` | var index uint64 = 18446744073709551615
+| `byte` | alias for `uint8`, fully equivalent | `0` | var index byte = 255
+| `float32` | 32-bit floating-point number | `0` | var index float32 = -342.3439
+| `float64` | 64-bit floating-point number | `0` | var index float64 = -342.3439
+| `complex64` | complex number, equivalent to two `float32` values | `(0+0i)` | index := complex(32.3, 18.9)
+| `complex128` | complex number, equivalent to two `float64` values | `(0+0i)` | index := complex(128.2323823, 1238.2829932)
+
+For more [examples](https://goplay.followthepattern.net/snippet/cQZT4nMzI69).
+
+## String
+
+In Golang, a `string` is fundamentally a sequence of bytes. When string literals are used in Go, they are encoded using the UTF-8 character encoding system by default. Each Unicode code point represents a unique character or symbol, which can be a single letter, digit, punctuation, or even an emoji. In Go, code points are represented using the `rune` type, which is an alias for the `int32` type.
+
+Since a `string` is a sequence of consecutive characters, you have the ability to access individual characters using `rune` values. It's important to note that, similar to the `string` type, `rune` values in Golang are also immutable, meaning their values cannot be changed once they're created.
+
+| Type | Description | Default Value | Example |
+| - | - | - | - |
+| `rune` | alias for `uint32`, fully equivalent | `0` | var index rune = 4294967295
+| `string` | character string type, convertible to `[]byte` | `""` | text := "hello"
+
+Further examples [here](https://goplay.followthepattern.net/snippet/LpcjgRe02Vc).
+
+## Constants
+
+Constants are expressions assigned with specific values. These are evaluated at compile time, not at runtime. To declare a constant, one assigns a value to a name using the const keyword. The fixed nature of their values ensures they cannot be accidentally reassigned during runtime.
+
+Example [here](https://goplay.followthepattern.net/snippet/8B2V4MYQ3uN).
+
+## Special Type
+`uintptr` is a special type capable of storing any pointer type; however, it's not treated by the garbage collection as a regular pointer. Generally, it's not used in Go, mostly the Golang language developers use it.

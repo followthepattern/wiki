@@ -1,0 +1,296 @@
+---
+title: Branches & Loops
+description: Detailed explanation of branches and loops
+published: true
+date: 2023-10-08T10:31:01.695Z
+tags: golang, go, branches, loops
+editor: markdown
+dateCreated: 2023-08-25T21:13:49.911Z
+---
+
+# Branches
+
+In Golang, there are several methods for implementing branches to control the flow of program execution.
+
+## if
+The most common method is the `if` statement, which evaluates a condition and executes a block of code if that condition is `true`
+
+```go
+if condition {
+    // code, runs only if the condition is true
+}
+```
+
+Any condition that ultimately evaluates to a boolean value can be used in a condition:
+```go
+if 2 > 1 {
+    fmt.Println("Hello Follow The Pattern!")
+}
+```
+
+## if ... else
+This extends the previous case by allowing you to specify code in the *else* branch that will run only if the condition fails. The syntax is:
+
+```go
+if condition {
+    // code, runs only if the condition is true
+} else {
+    // code, runs only if the condition is false
+}
+```
+
+In the following example, the `value` pointer is checked; if it's not `nil`, the value is printed, otherwise, the program terminates with an error:
+```go
+var value *int
+
+if value != nil {
+    fmt.Println(*value)
+} else {
+    log.Fatal("value is empty")
+}
+```
+
+## if ... else if ... else
+When multiple true branches are necessary in the condition, this form is one of the choices for handling it. The syntax looks like this:
+
+```go
+if condition1 {
+    // code, runs only if the first condition is true
+} else if condition2 {
+    // code, runs only if the second condition is true
+} else {
+    // code, runs only if none of the conditions are true
+}
+```
+
+Here is an example of using multiple branches. This piece of code notifies the user if their balance is zero or below:
+
+```go
+balance := 0
+
+if balance < 0 {
+    fmt.Println("Balance is below 0, add funds now or you will be charged a penalty.")
+} else if balance == 0 {
+    fmt.Println("Balance is equal to 0, add funds soon.")
+} else {
+    fmt.Println("Your balance is greater than 0.")
+}
+```
+
+## if with assignment
+The combination of assignment and `if` can be simplified using this syntax element, which binds the variable's reference to the block.
+
+```go
+if value, ok := os.LookupEnv("LOG_LEVEL"); ok {
+    // value and ok are declared and attached to this condition
+} else if value == "DEBUG" {
+    // and to all the branches
+} else {
+    fmt.Printf("LOG_LEVEL has an unexpected value: \"%s\"", value)
+}
+```
+
+## switch ... case
+This language element is also used for handling multiple logical branches, resulting in more readable and concise code. The syntax:
+
+```go
+today := time.Now()
+
+switch expression {
+case value1:
+    // code, runs only if the value is equal to the expression
+case value2:
+    // code, runs only if the value is equal to the expression
+...
+...
+default:
+    // code, runs only if none of the above is equal to the expression, this branch is not mandatory
+}
+```
+
+The following example shows a piece of code that outputs the name of the day if it's a weekday. If no match is found, the `default` branch will run, indicating it's the weekend:
+```go
+today := time.Now()
+
+switch today.Weekday() {
+case time.Monday:
+    fmt.Println("Monday")
+case time.Tuesday:
+    fmt.Println("Tuesday")
+case time.Wednesday:
+    fmt.Println("Wednesday")
+case time.Thursday:
+    fmt.Println("Thursday")
+case time.Friday:
+    fmt.Println("Friday")
+default:
+    fmt.Println("Weekend!")
+}
+```
+
+If no `default` branch is provided and none of the conditions are true, execution will exit the `switch` code block.
+
+```go
+today := time.Now()
+
+switch today.Weekday() {
+case time.Monday:
+    fmt.Println("Monday")
+case time.Tuesday:
+    fmt.Println("Tuesday")
+}
+```
+
+## switch ... case with assignment
+Similar to the `if` case, you can use abbreviated assignment in conjunction with the `switch` block.
+
+```go
+switch today := time.Now().Weekday(); today {
+case time.Monday:
+    fmt.Println("Monday")
+case time.Tuesday:
+    fmt.Println("Tuesday")
+case time.Wednesday:
+    fmt.Println("Wednesday")
+case time.Thursday:
+    fmt.Println("Thursday")
+case time.Friday:
+    fmt.Println("Friday")
+default:
+    fmt.Println("Weekend!")
+}
+```
+
+This language feature can save you few line of code. The variable created within the `switch` block cannot be used outside of that block.
+
+## switch ... case without condition
+It's not mandatory to define a condition when creating a `switch` block. In this case, the conditions following the `case` keyword will be evaluated based on whether they're true or false, determining which branch the assignment will continue on.
+
+```go
+balance := 0
+
+switch {
+case balance < 0:
+    fmt.Println("Balance is below 0, add funds now or you will be charged a penalty.")
+case balance == 0:
+    fmt.Println("Balance is equal to 0, add funds soon.")
+default:
+    fmt.Println("Your balance is greater than 0.")
+}
+```
+
+# Loops
+Loops are language features that allow a code block to be executed multiple times, preventing unnecessary code duplication. Several types of loops are available in Golang:
+ - Three-component loop
+ - *while*-like loop
+ - Infinite loop
+ - *For-each* loop
+
+## Three-component loop
+This is the classic implementation of a loop, consisting of three parts. The first part is a statement that is executed only once before the loop. The second part is a condition that controls when the looping will stop. The third part is also a statement that is executed after each iteration. Syntax:
+
+```go
+for first statement; condition; post statement {
+    // code, runs until the condition is true
+}
+```
+
+A short example:
+```go
+for i := 0; i < 10; i++ {
+    fmt.Println(i)
+}
+```
+
+Iterating over a list:
+```go
+list := []int{0, 1, 2, 3, 4}
+for i := 0; i < len(list); i++ {
+    fmt.Println(list[i])
+}
+```
+
+Using the `continue` keyword allows you to skip certain iterations of the loop. In the following example, only the values with odd indices are printed:
+```go
+list := []int{0, 1, 2, 3, 4}
+for i := 0; i < len(list); i++ {
+    if i%2 == 0 {
+        continue
+    }
+    fmt.Println(list[i])
+}
+```
+
+By using the `break` keyword, you can exit loop before it would finish. The next snippet demonstrates a simple search algorithm that prints whether the searched expression exists in a list:
+```go
+filter := "apple"
+
+list := []string{"banana", "apple", "orange"}
+
+found := false
+
+for i := 0; i < len(list); i++ {
+    if list[i] == filter {
+        found = true
+        break
+    }
+}
+
+fmt.Println("Does it contain apple?", found)
+```
+
+## *While*-like loop
+In other languages, this would be a separate language feature. In Golang, we can use the `for` keyword to condition-based loops as well. Essentially, you omit the first and third statements from the previous example. The syntax is:
+
+```go
+for condition {
+    // code, runs until the condition is true
+}
+```
+
+A simple example:
+```go
+n := 1
+for n < 5 {
+    n *= 2
+    fmt.Println(n)
+}
+```
+
+## Infinite loop
+This without a condition and statements, meaning it will run infinitely.
+
+```go
+for {
+    // code, runs infinite times
+}
+```
+
+Implementation example:
+```go
+for {
+    fmt.Println("Follow The Pattern")
+    if rand.Int()%2 == 0 {
+        break
+    }
+}
+```
+
+To prevent the program from running indefinitely, a condition must be placed within the loop. If the condition is true, the `break` will exit the loop. Otherwise, the loop would run indefinitely.
+
+## *For-each* loop
+This type simplifies iteration over a list, automatically managing indexing for you.
+
+```go
+for [INDEX OF THE CURRENT ITEM], [VALUE OF THE CURRENT ITEM] := range [LIST] {
+    // code, runs on each item of the list
+}
+```
+
+```go
+list := []string{"Follow", "The", "Pattern"}
+
+for index, value := range list {
+    fmt.Println(index, value)
+}
+```

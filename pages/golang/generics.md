@@ -1,0 +1,412 @@
+---
+title: Generics
+description: Detailed explanation of the golang generics
+published: true
+date: 2023-11-10T04:27:45.618Z
+tags: generics, golang
+editor: markdown
+dateCreated: 2023-09-04T15:53:02.653Z
+---
+
+# What Are The Generics?
+
+In software development, it is a common goal to create reusable and generic code to make application development and maintenance more efficient. In a statically typed language, achieving this can be more challenging compared to dynamic languages.
+
+This is where the generic programming approach comes in, allowing the passing of a specific type as a parameter on the calling side. This means that when creating a function, method, or data structure, you don't necessarily have to define the type. You can formulate a general logic that can work with multiple types and reuse it in various parts of your application.
+
+In programming languages, generics are often denoted with a type parameter, typically represented as `T`.
+
+Generics were introduced in Go starting from version 1.18. Prior to that, developers used techniques like `interface{}` and the `reflect` package to achieve a similar level of generality. Even with the introduction of generics, Go's developers still recommend not abandoning the use of `reflect` and `interface{}` entirely but rather supplementing them in a sensible way.
+
+## Advantages of Generics
+
+Generics offer several advantages over interfaces:
+
+- **Easier detection of type errors:** Type errors become more apparent as they are detected at compile time. Incorrect usage will result in a build error in a Go application.
+- **Type constraints:** You can specify type constraints to filter or allow specific types in your logic. This is referred to as "type constraints."
+
+## Where Can Generics Be Used?
+
+Generics can be used with the following language elements:
+
+- `func` (functions)
+- `struct` (structures)
+- `interface` (interfaces)
+
+### Func
+
+In Golang, a generic function can work with different types without sacrificing type safety. It allows you to pass a type as a parameter from the caller side, helping you formulate general logic and making your code more flexible and reusable.
+
+Currently, type parameters can be used in functions but not in methods. In the following code snippet, you can see a generic function called `Search` that searches for an element in a slice of any type based on a given condition. If a match is found, it returns a pointer to the element; otherwise, it returns `nil`.
+
+```go
+package main
+
+import "fmt"
+
+func Search[T any](values []T, filter func(T) bool) *T {
+	for _, v := range values {
+		if filter(v) {
+			return &v
+		}
+	}
+	return nil
+}
+
+func main() {
+	filter := func(v string) bool {
+		return v == "apple"
+	}
+
+	var apple = Search[string]([]string{"apple", "banana", "kiwi"}, filter)
+	fmt.Println(*apple)
+
+	// Passing the type explicitly is not necessary
+	// when it can be inferred from the parameter
+	apple = Search([]string{"apple", "banana", "kiwi"}, filter)
+	fmt.Println(*apple)
+}
+```
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/ftx4PhhyrL9).
+
+### Struct
+
+Type parameters can also be applied to structures, where they can be used for fields, method parameters, or method return types. In the code below, you can see part of a B-Tree implementation, where the `T` type parameter is used for both fields and methods. You only need to specify the type when calling the methods.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	btree := BTree[int]{}
+	btree.SetData(1)
+
+	value := btree.GetData()
+	fmt.Println(value)
+}
+
+type BTree[T any] struct {
+	value T
+	Left  *BTree[T]
+	Right *BTree[T]
+}
+
+func (b BTree[T]) GetData() T {
+	return b.value
+}
+
+func (b *BTree[T]) SetData(value T) {
+	b.value = value
+}
+```
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/0P53C827HbL).
+
+### Interface
+
+Since type parameters can be used with complex types, you can create interfaces that expect the implementing type to be generic. The advantage here is that you don't need to specify the types the data structure can handle when defining the interface; you can do it when calling the code.
+
+```go
+type DataStructure[T any] interface {
+	GetData() T
+	SetData(T)
+}
+```
+
+### Type Constraints
+Type constraints define the requirements that type parameters must fulfill to be used in a generic function or type.
+
+#### any
+
+This is a language-defined condition, indicating that any type can be assigned to the type parameter.
+
+#### comparable
+
+This is another language-defined condition, allowing only types that can be logically compared. In the example below, the `IsEqual` function uses the `comparable` constraint to compare two values.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+	equal := IsEqual("hello", "hi")
+	fmt.Println(equal)
+}
+
+func IsEqual[T comparable](a T, b T) bool {
+	return a == b
+}
+```
+
+You can run the above code [here](https://goplay.followthepattern.net/snippet/BSSMSi4ChcH).
+
+### Custom Type Constraints
+
+Type interface allows you to specify custom type constraints to limit the set of types that the caller of your generic function or struct can pass.
+
+```go
+type Number interface {
+	int64 | float64 | int
+}
+```
+
+### Constraints package
+Constraints package defines a set of basic constraints that can be useful to everyone.
+https://pkg.go.dev/golang.org/x/exp/constraints
+
+#### Complex
+
+```go
+type Complex interface {
+	~complex64 | ~complex128
+}
+```
+
+#### Float
+```go
+type Float interface {
+	~float32 | ~float64
+}
+```
+#### Integer
+```go
+type Integer interface {
+	Signed | Unsigned
+}
+```
+#### Ordered
+Ordered is a constraint that permits any type that supports the operators < <= >= >.
+```
+type Ordered interface {
+	Integer | Float | ~string
+}
+```
+You can see a `Min` generic function implementation that uses `constraints.Ordered` below
+```go
+package main
+
+import (
+	"fmt"
+	"golang.org/x/exp/constraints"
+)
+
+func Min[T constraints.Ordered](a, b T) T {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func main() {
+	fmt.Println(Min(3, 5))          // Output: 3
+}
+```
+
+Run the example [here](https://goplay.followthepattern.net/snippet/teMSeS_OXkp).
+#### Signed
+```
+type Signed interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64
+}
+```
+#### Unsigned
+```
+type Unsigned interface {
+	~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64 | ~uintptr
+}
+```
+
+## Implementing a Stack Data Structure in Multiple Ways
+In this chapter, you can see an implementation of a *Stack* data structure, which is a popular data structure. In statically typed languages, you need to define the type of the variable that the *Stack* can store. The *Stack* data type has three methods: `Push`, `Pop`, and `Len`. Different solutions may have varying numbers of methods for a *Stack* data structure. The `Push` function adds an element to the *Stack*, `Pop` retrieves the last added type, removing it from the *Stack*, and `Len` returns the length of the *Stack*.
+
+### Type-Specific Implementation
+In this solution, it can only store `string` values because the `items` field has a type of `[]string`. The advantage is that when reading values, you can be certain of the type of the `value` variable. Before the introduction of generics, you would have used `interface{}` to achieve generality, but reading the `value` type would have required reflection.
+
+```go
+package main
+
+import "fmt"
+
+type Stack struct {
+	items []string
+}
+
+func New() Stack {
+	return Stack{
+		items: []string{},
+	}
+}
+
+func (s *Stack) Pop() (result *string) {
+	if len(s.items) < 1 {
+		return nil
+	}
+	result = &s.items[len(s.items)-1]
+	s.items = s.items[:len(s.items)-1]
+	return
+}
+
+func (s *Stack) Len() int {
+	return len(s.items)
+}
+
+func (s *Stack) Push(item string) {
+	s.items = append(s.items, item)
+}
+
+func main() {
+	stack := New()
+
+	stack.Push("Learn Coding")
+	stack.Push("more effectively")
+	stack.Push("Follow The Pattern")
+
+	fmt.Println(stack.Len())
+
+	value := stack.Pop()
+
+	if value != nil {
+		fmt.Println(*value)
+	}
+
+	fmt.Println(stack.Len())
+}
+```
+
+The above example can be run [here](https://goplay.followthepattern.net/snippet/Lg19SPQz78Z?v=goprev).
+
+### Generic-Based Implementation
+The following code snippet demonstrates a *Stack* implementation using generics. It can be used in a type-agnostic manner.
+
+```go
+package main
+
+import "fmt"
+
+type Stack[T any] struct {
+	items []T
+}
+
+func New[T any]() Stack[T] {
+	return Stack[T]{
+		items: []T{},
+	}
+}
+
+func (s *Stack[T]) Pop() (result *T) {
+	if len(s.items) < 1 {
+		return nil
+	}
+	result = &s.items[len(s.items)-1]
+	s.items = s.items[:len(s.items)-1]
+	return
+}
+
+func (s *Stack[T]) Len() int {
+	return len(s.items)
+}
+
+func (s *Stack[T]) Push(item T) {
+	s.items = append(s.items, item)
+}
+
+func main() {
+	stackString := New[string]()
+
+	stackString.Push("Follow")
+	stackString.Push("The")
+	stackString.Push("Pattern")
+
+	fmt.Println(stackString.Len())
+
+	value1 := stackString.Pop() // string type
+	if value1 != nil {
+		fmt.Println(*value1)
+	}
+
+	fmt.Println(stackString.Len())
+
+	stackInt := New[int]()
+
+	stackInt.Push(1)
+	stackInt.Push(2)
+	stackInt.Push(3)
+
+	fmt.Println(stackInt.Len())
+
+	value2 := stackInt.Pop()
+	if value1 != nil {
+		fmt.Println(*value2) // int type
+	}
+
+	fmt.Println(stackInt.Len())
+}
+```
+
+In the `main` function, the *Stack* data structure works with multiple types. The `T` type parameter has no constraints, allowing any type to be passed to it using the `any` keyword. The `T` type parameter appears in the *Stack* method parameters and in the `New` function, as you need to define that these functions can only accept variables of the type specified when defining the *Stack* type, ensuring that only compatible variables can be provided to the *Stack*.
+
+The above example can be run [here](https://goplay.followthepattern.net/snippet/DlGYnyOry-S?v=goprev).
+
+### Generics and Type Interface
+The `Number` interface is a type constraint that summarizes the types that `T` can accept. In this example, a narrower set of types is defined to illustrate that the `stackString` variable cannot be created because the `string` type does not meet the `Number` constraints. The `Number` interface defines a set of types, and the `|` character functions as a union, indicating that all three types can be provided to the *Stack*.
+
+```go
+package main
+
+import "fmt"
+
+type Number interface {
+	int64 | float64 | int
+}
+
+type Stack[T Number] struct {
+	items []T
+}
+
+func New[T Number]() Stack[T] {
+	return Stack[T]{
+		items: []T{},
+	}
+}
+
+func (s *Stack[T]) Pop() (result *T) {
+	if len(s.items) < 1 {
+		return nil
+	}
+	result = &s.items[len(s.items)-1]
+	s.items = s.items[:len(s.items)-1]
+	return
+}
+
+func (s *Stack[T]) Len() int {
+	return len(s.items)
+}
+
+func (s *Stack[T]) Push(item T) {
+	s.items = append(s.items, item)
+}
+
+func main() {
+	// stackString := New[string]() // Compiler error: string does not implement Number
+
+	stackInt := New[int]()
+
+	stackInt.Push(1)
+	stackInt.Push(2)
+	stackInt.Push(3)
+
+	fmt.Println(stackInt.Len())
+
+	value2 := stackInt.Pop()
+	if value2 != nil {
+		fmt.Println(*value2) // int type
+	}
+
+	fmt.Println(stackInt.Len())
+}
+```
+
+The above code example can be run [here](https://goplay.followthepattern.net/snippet/aHBxDxPKPxz?v=goprev).

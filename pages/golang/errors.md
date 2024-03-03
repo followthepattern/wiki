@@ -1,0 +1,157 @@
+---
+title: Error handling
+description: Detailed explanation of how golang handle errors
+published: true
+date: 2023-11-05T03:55:47.487Z
+tags: golang, go, error handling, panic
+editor: markdown
+dateCreated: 2023-09-04T15:30:50.732Z
+---
+
+# Error Handling
+
+In the Go (Golang) programming language, errors are not treated as exceptions, and there is no concept of exception throwing.
+
+## Error Interface
+Error handling is accomplished through the use of the error interface. The occurrence of an error does not necessarily lead to the immediate termination of the program. In contrast to some other languages, where attempting to open a non-existent file would trigger an exception, causing the application to throw an error and terminate if the exception is not caught, Go handles this differently. In Go, such an action does not result in a fatal error; instead, an error object is returned, allowing the developer to decide how to respond to the situation.
+
+The `error` interface is used for organizing, propagating, and handling errors.
+
+Its implementation looks like this:
+
+```go
+type error interface {
+    Error() string
+}
+```
+
+From the code snippet above, you can see that the types are used for error handling must have a function named `Error`, which returns a `string`. This function will provide the error message.
+
+```go
+type CustomError struct {
+    Msg string
+}
+
+func (e CustomError) Error() string {
+    return e.Msg
+}
+
+func main() {
+    var Error error
+    Error = CustomError{"error"}
+  
+    log.Fatal(Error)
+}
+```
+
+`CustomError` is a correct implementation of the `error` interface so it can be assigned to the `Error` variable, which type is `error` interface.
+
+## Defer
+In a typical Go application, expressions are executed sequentially, one after the other.
+
+```go
+fmt.Println("Follow")
+fmt.Println("The")
+fmt.Println("Pattern!")
+```
+
+There are exceptions, such as `defer`. Functions marked with `defer` don't execute when they are called but instead run after the invoking function has finished. If multiple `defer` functions are used, their execution order will be the reverse of their calls.
+
+```go
+func main() {
+    defer fmt.Println("Follow")
+    defer fmt.Println("The")
+    defer fmt.Println("Pattern!")
+    // Pattern!
+    // The
+    // Follow
+}
+```
+
+The practical advantage of the `defer` keyword is that it allows you to use an initializing function and its associated closing logic closely together. Anonymous functions are often passed to `defer` because there's no need to define a new function explicitly. However, a function call must always follow the `defer` keyword.
+
+```go
+func main() {
+    f, err := os.Create("/tmp/fp.txt")
+    if err != nil {
+        fmt.Fprintf(os.Stderr, "error: %v\n", err)
+        os.Exit(1)
+    }
+    defer func() {
+        err := f.Close()
+        if err != nil {
+            fmt.Fprintf(os.Stderr, "error: %v\n", err)
+            os.Exit(1)
+        }
+    }()
+    fmt.Println("writing")
+    fmt.Fprintln(f, "Follow The Pattern")
+}
+```
+
+In the code for creating a file, the `f` variable references the opened file. After writing to the file, it should be closed, which is done using the `f.Close()` method. The closing logic is placed within an anonymous function and called after the `defer` keyword. Placing the closing logic immediately after the file creation logic makes the code more readable.
+
+## Panic
+If you aim to achieve error handling behavior similar to other languages, you can use the `panic` function. Its purpose is to immediately terminate the application upon invocation while also reporting the error. This includes printing the error message, displaying a goroutine trace, and setting the application's exit status to a non-zero value.
+
+```go
+func main() {
+    _, err := os.Open("/tmp/nonexisting")
+    if err != nil {
+        panic(err) // panic: open /fp/nonexisting: no such file or directory
+        fmt.Println("Follow The Pattern!")
+    }
+}
+```
+
+In the code snippet above, the `panic` function is used, passing the value of the `err` variable, which causes the program to panic if the `err` value is not `nil`. It's essential to note that after calling `panic`, further processing does not occur. The program exits immediately in this case.
+
+The runtime can also trigger a `panic` if the situation requires it.
+
+```go
+func main() {
+    a := 1
+    b := 0
+
+    fmt.Println(a / b)
+    fmt.Println("Follow The Pattern!") // won't be executed
+}
+```
+
+Dividing by zero will result in a panic, causing the application to terminate with an error. The program assumes a fatal error has occurred and needs to be stopped as soon as possible.
+
+## Recover
+`recover` is a built-in function that regains control over a goroutine where a `panic` function was called. `recover` only works within a `defer` block. During normal execution, the `recover` function always returns `nil` and has no other side effects. If a `panic` occurs in the same goroutine where `recover` is called, it captures the error contained within the `panic` and stores it in the `err` variable.
+
+```go
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Println("Learn coding")
+    panicker()
+    fmt.Println("Fast!")
+}
+
+func panicker() {
+    fmt.Println("it will panic")
+    defer func() {
+        if err := recover(); err != nil {
+            fmt.Println("Error:", err)
+        }
+    }()
+    panic("Fatal error")
+    fmt.Println("end of panicker")
+}
+```
+
+You can run this code [here](https://goplay.followthepattern.net/snippet/knCvkbdh_0n).
+
+The code snippet above demonstrates how the `recover` function can catch a `panic` for error handling. The `recover` function operates only within a `defer` block, capturing the error passed to it by the `panic` function and storing it in the `err` variable. The "end of panicker" message won't be printed because the execution stops at the `panic` line and continues within the `defer` block. It prints the error and exits the function, but the program execution continues, allowing the `main` function to run without issues.
+
+The code snippet above demonstrates how the recover function can catch a panic for error handling. The recover function operates only within a defer block, capturing the error passed to it by the panic function and storing it in the `err` variable. The *end of panicker* message won't be printed because the execution stops at the panic line and continues within the defer block. It prints the error and exits the function, but program execution continues, allowing the `main` function to run without issues.
+
+### Try-Catch
+
+In the Go programming language, there is **no** classical `try-catch` style error handling. The `defer`-`recover` pair can provide similar functionality, but this approach is not typically used in Go and is not meant to be used as a `try-catch`. Error handling in Go is primarily done using the `error` interface. This results in more transparent code because it distinguishes clearly between expected and unexpected errors. In other languages, without examining the error, it can be harder to figure out.

@@ -1,0 +1,107 @@
+---
+title: Select
+description: Explains how select works in the Go programming language
+published: true
+date: 2023-09-15T22:03:23.489Z
+tags: golang, go, select
+editor: markdown
+dateCreated: 2023-09-15T22:03:23.489Z
+---
+
+# Select
+
+In the Golang programming language, `select` is a crucial feature for implementing Go's concurrency. It allows a **goroutine** to read from or write to one or more **channels**. It closely resembles the syntax of a `switch` statement. `select` blocks execution until one of the **channel** operations can proceed.
+
+When multiple concurrent operations arrive at a `select`, it will choose one arbitrarily, not necessarily the first defined case.
+
+**General syntax**
+```go
+select {
+	case value := <- channel:
+		// code, runs if this channel has been selected
+	case value := <- channel:
+		// code, runs if this channel has been selected
+	case value := <- channel:
+		// code, runs if this channel has been selected
+	case value := <- channel:
+		// code, runs if this channel has been selected
+  ...
+	}
+```
+
+`select` will execute only the code associated with the branch that has been selected and ignore the others, much like a `switch`.
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	ch1 := make(chan string)
+	ch2 := make(chan string)
+
+	go func() {
+		time.Sleep(time.Second * 2)
+		ch1 <- "Hello"
+	}()
+
+	go func() {
+		time.Sleep(time.Second * 3)
+		ch2 <- "Follow The Pattern"
+	}()
+
+	select {
+	case msg := <-ch1:
+		fmt.Println(msg)
+	case msg := <-ch2:
+		fmt.Println(msg)
+	}
+}
+```
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/yGILApNn-6Z?v=goprev).
+
+In the code above, a simple example of using `select` is demonstrated, where data is read from two **channel** variables. The order of data arrival determines which channel's data gets read. In this case, only the value from `ch1` is read. The value from `ch2` is not read.
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	ch1 := make(chan string)
+	ch2 := make(chan string)
+
+	go func() {
+		time.Sleep(time.Second * 2)
+		ch1 <- "Hello"
+	}()
+
+	go func() {
+		time.Sleep(time.Second * 3)
+		ch2 <- "Follow The Pattern"
+	}()
+
+	for { // infinite loop
+		select {
+		case msg := <-ch1:
+			fmt.Println(msg)
+		case msg := <-ch2:
+			fmt.Println(msg)
+		case <-time.After(time.Second * 4): // timeout
+			fmt.Println("times out")
+			return
+		}
+	}
+}
+```
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/zGmMJrntAof?v=goprev).
+
+The code above is a modification of the previous example. By adding an infinite loop, data reading occurs not only from the first channel that sends data but from the others as well, until the timeout is reached. The built-in `time` library is used to implement timeout behavior with the `After` function, which returns a channel and sends a signal after the specified time interval (4 seconds in this example). Therefore, only data arriving within the specified time interval will be processed, and those arriving later will not be processed because the program exits due to the `return` statement.

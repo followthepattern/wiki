@@ -1,0 +1,68 @@
+---
+title: Goroutine
+description: Explanation of how goroutines work in Go programming language
+published: true
+date: 2023-10-22T10:41:09.822Z
+tags: golang, go, goroutine
+editor: markdown
+dateCreated: 2023-09-15T21:35:43.761Z
+---
+
+# Goroutine
+
+A **goroutine** is a Golang language feature, that refers to a process that runs concurrently.
+
+To understand **goroutine**, it's helpful to first review a couple of concepts. One is a *“process”*, which is an instance of a program that the computer's operating system runs. The operating system assigns certain resources, such as memory, to these *“processes”* and ensures that other *“processes”* cannot access those resources.
+
+A *“process”* contains one or more threads. A thread is an execution unit that the operating system runs for some time. Threads share access to resources within the *“process”*. Depending on how many cores it has, a CPU can execute tasks on multiple threads at once. The task of the operating system is to schedule threads on the CPU to ensure that every *“process”* and every thread in the process gets a chance to run.
+
+A **goroutine** is a lightweight thread managed by the **Go runtime** scheduler. When a Go program starts, with the help of the **Go runtime**, it initializes several operating system-level threads along with the main **goroutine** for the program to execute. This scheduling design is known as the M:N model, where multiple goroutines (M) can be distributed onto a fewer number of operating system threads (N). All subsequent **goroutines** created by the program, including the initial one, are automatically distributed onto these threads by the **Go scheduler**, similar to how the operating system schedules threads among CPU cores. Creating a new **goroutine** doesn't necessarily create a new thread.
+
+This has the following advantages:
+
+-	Creating a **goroutine** is faster than an *“OS thread”* because it doesn't allocate operating system-level resources.
+
+-	The initial *“stack”* size of a **goroutine** is smaller than the *“stack”* size of an operating system-level thread, which can grow as needed.
+
+-	Switching between **goroutines** is faster than switching between *“OS threads”* as it occurs within an operating system-level process.
+
+-	The **go scheduler** can optimize its operation because it's part of the Go program *“process”*.
+
+A **goroutine** can be created using the `go` keyword, which should be followed by a function call. It looks like this:
+
+```go
+func main() {
+	go func() {
+		// code
+	}()
+  
+  // code
+}
+```
+In the example above, there is an anonymous function, which will run in concurrently with the main execution thread.
+
+In the code snippet below, the `print` function is called twice, once in a **goroutine** and once on the main **goroutine**.
+
+```go
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	go print("routine")
+	print("direct")
+}
+
+func print(s string) {
+	for i := 0; i < 5; i++ {
+		time.Sleep(time.Second) // sleeps for 1 second
+		fmt.Println(s)
+	}
+}
+```
+You can run the above example [here](https://goplay.followthepattern.net/snippet/OXfiPin1iwa?v=goprev).
+
+Since the `Sleep` function is called on both threads, the `fmt.Println` function within the **goroutine** has enough time to print the text. After multiple runs, notice that the values are not always printed in the same order. This is because the **go scheduler** runs the **goroutines** in different sequences.
