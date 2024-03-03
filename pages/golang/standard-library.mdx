@@ -36,7 +36,7 @@ The `fmt` package implements I/O formatting following the example of C's `printf
 
 The following code snippet contains some examples of using `fmt` functions, which you can try [here](https://goplay.followthepattern.net/snippet/GPVAn0TXK_8).
 
-```go
+```go copy
 package main
 
 import (
@@ -74,7 +74,7 @@ func main() {
 
 The `os.File` type implements the `io.Writer` interface, allowing it to be used together with `fmt` functions. It will behave the same way as if you were writing to the console.
 
-```go
+```go copy
 package main
 
 import (
@@ -121,7 +121,7 @@ You can run the code in your browser [here](https://goplay.followthepattern.net/
 
 The `errors` package implements functions necessary for handling the `error` interface. The following code snippet provides examples you can try [here](https://goplay.followthepattern.net/snippet/T7kkCNDuojI).
 
-```go
+```go copy
 package main
 
 import (
@@ -163,7 +163,7 @@ The `encoding/json` package implements JSON encoding and decoding functions foll
 
 The following code snippet demonstrates converting a list of `structs` to JSON format:
 
-```go
+```go copy
 package main
 
 import (
@@ -233,7 +233,7 @@ To read JSON into a `struct` value in Go, you can use the `Unmarshal` function. 
 
 Here's the code in English with the Markdown format:
 
-```go
+```go copy
 package main
 
 import (
@@ -267,7 +267,7 @@ You can run it in a browser [here](https://goplay.followthepattern.net/snippet/Z
 
 The `os` package contains platform-independent functions for interacting with operating system functionalities. The following code snippets provide a few simple examples of using environment variables.
 
-```go
+```go copy
 package main
 
 import (
@@ -305,7 +305,7 @@ func main() {
 
 You can try out this code snippet [here](https://goplay.followthepattern.net/snippet/XjjnslCALLK).
 
-```go
+```go copy
 package main
 
 import (
@@ -350,7 +350,7 @@ The `io` package provides basic interfaces for I/O primitives, such as reading a
 
 The code snippet below demonstrates the use of `io.Reader` and `io.Writer` and can be tried out [here](https://goplay.followthepattern.net/snippet/bs9__lzECCD).
 
-```go
+```go copy
 package main
 
 import (
@@ -384,7 +384,7 @@ func main() {
 
 The slog library in Golang is a structured logging library, offering a way to log messages in a structured form.
 
-```go
+```go copy
 package main
 
 import (
@@ -410,7 +410,7 @@ The `time` package provides functionalities for measuring and displaying time.
 
 The code snippet below demonstrates various examples of using the `time` package, and you can try it out [here](https://goplay.followthepattern.net/snippet/xLH0YjKpgnx).
 
-```go
+```go copy
 package main
 
 import (
@@ -455,7 +455,7 @@ func main() {
 
 The `strconv` package contains conversion functions that allow you to convert basic types to strings and vice versa. You can try it out [here](https://goplay.followthepattern.net/snippet/cy-QnbH6WCb).
 
-```go
+```go copy
 package main
 
 import (
@@ -509,7 +509,7 @@ The `sync` package implements basic synchronization primitives such as `Once`, `
 
 Here's a simple example of using `WaitGroup`:
 
-```go
+```go copy
 package main
 
 import (
@@ -536,7 +536,7 @@ You can run the above code in your browser [here](https://goplay.followthepatter
 
 Here's an example demonstrating the use of `sync.Mutex`:
 
-```go
+```go copy
 package main
 
 import (
@@ -577,7 +577,7 @@ This package introduces the `Context` type, which can carry variables related to
 
 By associating values with the `Context` type, it is easy to express whether a specific call has a successful authentication. The following example demonstrates how to add a variable to the `Context` variable that stores information about the logged-in user:
 
-```go
+```go copy
 package main
 
 import (
@@ -608,7 +608,7 @@ You can run the code snippet above [here](https://goplay.followthepattern.net/sn
 
 A `Context` variable can be created along with a `cancel` function, which can be used to signal the termination of a request:
 
-```go
+```go copy
 package main
 
 import (
@@ -636,7 +636,7 @@ You can run the code snippet above [here](https://goplay.followthepattern.net/sn
 
 The `Context` type can also be used to define deadlines, signaling the termination of a call:
 
-```go
+```go copy
 package main
 
 import (
@@ -667,7 +667,7 @@ You can run the code snippet above [here](https://goplay.followthepattern.net/sn
 
 A `Context` variable can also be created with a predefined timeout value, which signals the termination of a call. The difference from the previous example is that you specify a time interval rather than a specific time:
 
-```go
+```go copy
 package main
 
 import (
@@ -697,7 +697,7 @@ You can run the code snippet above [here](https://goplay.followthepattern.net/sn
 
 The `net` package implements various network I/O interfaces, such as TCP/IP. In the following code snippet, you can find an example of running a small web service using the `net/http` package. You can gain a deeper understanding of this package by following the Go courses provided by Follow The Pattern:
 
-```go
+```go copy
 package main
 
 import (
@@ -722,7 +722,7 @@ The `regexp` package implements regular expression search. Its syntax follows th
 
 In the following code snippet, you can see an email regex validation that aims to filter out incorrectly formatted email addresses:
 
-```go
+```go copy
 package main
 
 import (
@@ -752,7 +752,7 @@ You can run the above example [here](https://goplay.followthepattern.net/snippet
 
 In this code snippet, we extract values from regexp groups, where a specific format string needs to be parsed to extract valid characters:
 
-```go
+```go copy
 package main
 
 import (
@@ -785,7 +785,7 @@ You can run this code snippet [here](https://goplay.followthepattern.net/snippet
 
 The `flag` package implements command-line flag parsing.
 
-```go
+```go copy
 package main
 
 import (

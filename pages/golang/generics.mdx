@@ -39,7 +39,7 @@ In Golang, a generic function can work with different types without sacrificing 
 
 Currently, type parameters can be used in functions but not in methods. In the following code snippet, you can see a generic function called `Search` that searches for an element in a slice of any type based on a given condition. If a match is found, it returns a pointer to the element; otherwise, it returns `nil`.
 
-```go
+```go copy
 package main
 
 import "fmt"
@@ -74,7 +74,7 @@ You can run the above example [here](https://goplay.followthepattern.net/snippet
 
 Type parameters can also be applied to structures, where they can be used for fields, method parameters, or method return types. In the code below, you can see part of a B-Tree implementation, where the `T` type parameter is used for both fields and methods. You only need to specify the type when calling the methods.
 
-```go
+```go copy
 package main
 
 import "fmt"
@@ -108,7 +108,7 @@ You can run the above example [here](https://goplay.followthepattern.net/snippet
 
 Since type parameters can be used with complex types, you can create interfaces that expect the implementing type to be generic. The advantage here is that you don't need to specify the types the data structure can handle when defining the interface; you can do it when calling the code.
 
-```go
+```go copy
 type DataStructure[T any] interface {
 	GetData() T
 	SetData(T)
@@ -126,7 +126,7 @@ This is a language-defined condition, indicating that any type can be assigned t
 
 This is another language-defined condition, allowing only types that can be logically compared. In the example below, the `IsEqual` function uses the `comparable` constraint to compare two values.
 
-```go
+```go copy
 package main
 
 import "fmt"
@@ -147,7 +147,7 @@ You can run the above code [here](https://goplay.followthepattern.net/snippet/BS
 
 Type interface allows you to specify custom type constraints to limit the set of types that the caller of your generic function or struct can pass.
 
-```go
+```go copy
 type Number interface {
 	int64 | float64 | int
 }
@@ -159,20 +159,20 @@ https://pkg.go.dev/golang.org/x/exp/constraints
 
 #### Complex
 
-```go
+```go copy
 type Complex interface {
 	~complex64 | ~complex128
 }
 ```
 
 #### Float
-```go
+```go copy
 type Float interface {
 	~float32 | ~float64
 }
 ```
 #### Integer
-```go
+```go copy
 type Integer interface {
 	Signed | Unsigned
 }
@@ -185,7 +185,7 @@ type Ordered interface {
 }
 ```
 You can see a `Min` generic function implementation that uses `constraints.Ordered` below
-```go
+```go copy
 package main
 
 import (
@@ -225,7 +225,7 @@ In this chapter, you can see an implementation of a *Stack* data structure, whic
 ### Type-Specific Implementation
 In this solution, it can only store `string` values because the `items` field has a type of `[]string`. The advantage is that when reading values, you can be certain of the type of the `value` variable. Before the introduction of generics, you would have used `interface{}` to achieve generality, but reading the `value` type would have required reflection.
 
-```go
+```go copy
 package main
 
 import "fmt"
@@ -281,7 +281,7 @@ The above example can be run [here](https://goplay.followthepattern.net/snippet/
 ### Generic-Based Implementation
 The following code snippet demonstrates a *Stack* implementation using generics. It can be used in a type-agnostic manner.
 
-```go
+```go copy
 package main
 
 import "fmt"
@@ -353,7 +353,7 @@ The above example can be run [here](https://goplay.followthepattern.net/snippet/
 ### Generics and Type Interface
 The `Number` interface is a type constraint that summarizes the types that `T` can accept. In this example, a narrower set of types is defined to illustrate that the `stackString` variable cannot be created because the `string` type does not meet the `Number` constraints. The `Number` interface defines a set of types, and the `|` character functions as a union, indicating that all three types can be provided to the *Stack*.
 
-```go
+```go copy
 package main
 
 import "fmt"

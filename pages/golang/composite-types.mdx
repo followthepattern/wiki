@@ -15,28 +15,28 @@ In Go, **composite types** are types that are created by combining one or more o
 An array in Go is a fixed-size sequence of elements, all of the same type. When declaring an array, you must specify its size.
 
 General syntax
-```go
+```go copy
 list := [int]Type{}
 ```
 Its default value is `nil` or a `nil slice`, as it's not possible to assign the `nil` value of another type.
 
 When defining an array, you must always specify the length of the data sequence.
-```go
+```go copy
 array := [3]int{}
 ```
 
 The `array` has a length value, which can be accessed as follows; if the default value is set, the length will be 0.
 
-```go
+```go copy
 length := len(array)
 ```
 Additionally, individual elements can be accessed using indexing.
 
-```go
+```go copy
 item := array[1]
 ```
 
-```go
+```go copy
 package main
 
 import "fmt"
@@ -63,13 +63,13 @@ If the length of the data sequence isn't defined, it won't create an `array` typ
 A slice in Go is a dynamic array that can store elements of the same type. It can be indexed and its length queried, much like a fixed-size array. Unlike arrays, slices can grow or shrink as needed. When the capacity is exceeded, a new underlying array is allocated, and the data is transferred.
 
 General syntax
-```go
+```go copy
 list := []Type{}
 ```
 Its default value is `nil` or a `nil slice`.
 
 Here's how you can create a `slice` type:
-```go
+```go copy
 package main
 
 import (
@@ -108,14 +108,14 @@ You can run the above code [here](https://goplay.followthepattern.net/snippet/VW
 
 Its default value is `nil` or a `nil slice`, as it's not possible to assign the `nil` value of another type.
 
-```go
+```go copy
 length := len(array)
 ```
 The default length will be zero.
 
 Individual elements can be accessed using indexing, similar to an `array`.
 
-```go
+```go copy
 item := slice[1]
 ```
 
@@ -124,7 +124,7 @@ item := slice[1]
 In the Go programming language, a `map` is an implementation of a hash table.
 
 General syntax:
-```go
+```go copy
 map[KeyType]ValueType
 ```
 
@@ -134,27 +134,27 @@ Its default value is `nil` or a `nil map`, as it's not possible to assign any ot
 
 There are several ways to initialize a map:
 
-```go
+```go copy
 var m map[string]int = map[string]int{}
 ```
 
-```go
+```go copy
 m := map[string]int{}
 ```
 
-```go
+```go copy
 m := make(map[string]int)
 ```
 
 Assigning a value after initialization is straightforward:
 
-```go
+```go copy
 m["follow"] = 2022
 ```
 
 Value assignment during initialization:
 
-```go
+```go copy
 m := map[string]int {
 	"follow": 1,
 	"the": 2,
@@ -164,13 +164,13 @@ m := map[string]int {
 
 Reading from a map can also be done in several ways:
 
-```go
+```go copy
 value := m["follow"]
 ```
 
 If there is no value associated with the key, the `map` returns the default value of the value type. In such cases, it is better to use the following approach:
 
-```go
+```go copy
 value, ok := m["follow"]
 ```
 
@@ -178,13 +178,13 @@ The boolean variable `ok` indicates whether the `map` contains the requested key
 
 The built-in `delete` function can be used with a `map` to easily remove an element:
 
-```go
+```go copy
 delete(m, "follow")
 ```
 
 The `len` function can be used to determine how many key-value pairs have been registered:
 
-```go
+```go copy
 len(m)
 ```
 
@@ -192,13 +192,13 @@ len(m)
 A `struct` is a collection of fields of different types that logically belong together, that creates a new type. It's not a reference type, which means, when a `struct` passed to a function it will be copied. `struct`'s fields will hold their default values until it gets defined.
 
 General syntax:
-```go
+```go copy
 type [NAME] struct {
 	[FIELD NAME] [FIELD TYPE] [TAGS...]
 }
 ```
 Here's an example of creating a `struct`:
-```go
+```go copy
 type Vertex struct {
 	X int `json:"x"`
   Y int `json:"y"`
@@ -206,13 +206,13 @@ type Vertex struct {
 }
 ```
 The above syntax can be further simplified if tags are not defined:
-```go
+```go copy
 type Vertex struct {
 	X, Y, Z int
 }
 ```
 Fields' values can be modified later:
-```go
+```go copy
 v := Vertex{
 	X: 1,
 	Y: 2,
@@ -223,7 +223,7 @@ v.X = 3
 fmt.Println(v)
 ```
 Pointers to the `struct` can also be created using the `&` operator:
-```go
+```go copy
 v := Vertex{
 	X: 1,
 	Y: 2,
@@ -235,7 +235,7 @@ p := &v
 fmt.Println(p)
 ```
 A new variable from a `struct` can be created in various ways:
-```go
+```go copy
 fmt.Println(Vertex{1, 2, 3})
 fmt.Println(Vertex{X: 1})
 fmt.Println(Vertex{Y: 2, Z: 3})
@@ -245,7 +245,7 @@ fmt.Println(&Vertex{1, 2, 3})
 ```
 For accessing different fields or modifying them, you can use the `.` character. This also works with pointers, but you need to check that the pointer is not `nil` before reading it.
 
-```go
+```go copy
 v := Vertex{
 	X: 1,
 	Y: 2,
@@ -263,7 +263,7 @@ struct embedding is a mechanism that allows you to compose or embed one struct t
 
 The fields and methods of the embedded struct become part of the embedding struct. This enables you to access the embedded struct's fields and methods as if they were directly defined in the embedding struct.
 
-```go
+```go copy
 type Base struct {
 	ID   int
 	Name string
@@ -295,13 +295,13 @@ It's important to note that, with type embedding, the methods of the embedded ty
 
 It's possible to shadow methods of the inner type to access them using the receiver of the outer type.
 
-```go
+```go copy
 func (u *User) GetName() string {
     return u.Base.Name
 }
 ```
 When creating an instance of the outer type, you can set the values of the inner types:
-```go
+```go copy
 func NewUser(name string, creationID int) User {
 	return User{
 		Base{Name: name},
@@ -310,7 +310,7 @@ func NewUser(name string, creationID int) User {
 }
 ```
 But this is not mandatory; Otherwise the fields will take their default values.
-```go
+```go copy
 func NewUser(name string, creationID int) User {
 	return User{}
 }
@@ -318,7 +318,7 @@ func NewUser(name string, creationID int) User {
 
 Embedded types introduce naming conflicts, but these can be resolved easily. The fields or methods of the outer type always shadow those of the inner type. Additionally, the name of the embedded can't be the same to the field name of the enclosing type at the same level.
 
-```go
+```go copy
 type User struct {
 	Log
 	Log Logger
@@ -327,7 +327,7 @@ type User struct {
 
 Without the ability to embed types, you would need to write enclosing functions around the fields, just like in the below example, which would increase the lines of code without substantially improving functionality.
 
-```go
+```go copy
 type User struct {
 	base Base
 	log  Log
@@ -344,7 +344,7 @@ In Go, an *anonymous* `struct` is a `struct` type that can be defined without a 
 
 In the following code snippet, a variable named `point` receives an anonymous `struct` object with two integer fields, `x` and `y`. Afterward, the value of the `x` field is modified just as it would be with a regular named `struct`.
 
-```go
+```go copy
 package main
 
 import "fmt"
@@ -369,7 +369,7 @@ You can run the above code [here](https://goplay.followthepattern.net/snippet/uy
 
 In the next example, a traditional named `struct` and an anonymous `struct` are compared. Both have identical field names and values. The comparison evaluates to true.
 
-```go
+```go copy
 package main
 
 import "fmt"

@@ -25,14 +25,14 @@ Every Go program has at least one such function, which is the `main` function, t
 
 General syntax
 
-```go
+```go copy
 func [FUNCTION NAME] ([ARGUMENTS...]) ([RETURN VALUE TYPES...]) {
  // code here...
 }
 ```
 You can define any number of function arguments and return values. Both are optional, as you can see in the following examples.
 
-```go
+```go copy
 func main() {
     fmt.Println("Hello World!")
 }
@@ -41,7 +41,7 @@ In the code snippet above, you can see the default `main` function, which has no
 
 An example for multiple arguments
 
-```go
+```go copy
 func Add(a int, b int) int {
     return a + b
 }
@@ -53,7 +53,7 @@ func main() {
 ```
 Function definition within another function:
 
-```go
+```go copy
 func main() {
     add := func(a int, b int) int {
         return a + b
@@ -64,7 +64,7 @@ func main() {
 ```
 Function with multiple return values:
 
-```go
+```go copy
 func GetUserByID(id int) (User, error) {
     // ...
 }
@@ -72,7 +72,7 @@ func GetUserByID(id int) (User, error) {
 
 It is possible to declare *"named"* return values when defining the function. This allows you to provide names for return value types that can be referenced from the function body.
 
-```go
+```go copy
 func getItem(name string) (value *string, ok bool) {
     value = nil
     ok = false
@@ -86,7 +86,7 @@ A *closure* is an instance of a function, while an anonymous function is a funct
 
 General syntax
 
-```go
+```go copy
 func ([ARGUMENTS...]) ([RETURN VALUE TYPES...]) {
     // ...
 }([arguments...])
@@ -94,7 +94,7 @@ func ([ARGUMENTS...]) ([RETURN VALUE TYPES...]) {
 
 Simple example:
 
-```go
+```go copy
 func main() {
     func() {
         fmt.Println("Hello Follow The Pattern!")
@@ -105,7 +105,7 @@ In the code snippet above, you can see an anonymous function without parameters 
 
 In the next example, the anonymous function receives a `string` and returns with an `int`, the length of the given `string`.
 
-```go
+```go copy
 func main() {
     length := func(a string) int {
         return len(a)
@@ -115,7 +115,7 @@ func main() {
 
 You can return with a function (a closure)
 
-```go
+```go copy
 func main() {
     nextNumber := GetSequence()
     fmt.Println(nextNumber())
@@ -137,7 +137,7 @@ The `GetSequence` function in Go returns another function (a closure) that gener
 
 It's worth mentioning that the `i` variable will be in the scope of the anonymous function, as demonstrated in the following example:
 
-```go
+```go copy
 func Run() {
     nextNumber := GetSequence()
     fmt.Println(nextNumber())
@@ -164,7 +164,7 @@ The `nextNumber2` function starts a new indexing, demonstrating that `i` does no
 
 Anonymous functions can also return multiple values and accept multiple parameters, making them almost equivalent to the first function category.
 
-```go
+```go copy
 func (a int, b string, c bool) (string, int, bool) {
     return b, a, c
 }(1, "follow", true)
@@ -175,7 +175,7 @@ A function bound to a type. It is very similar to the first function category; t
 
 General syntax
 
-```go
+```go copy
 func ([RECEIVER NAME] Type) [METHOD NAME]([ARGUMENTS...])([RETURN TYPES...]){
     // Code
 }
@@ -183,7 +183,7 @@ func ([RECEIVER NAME] Type) [METHOD NAME]([ARGUMENTS...])([RETURN TYPES...]){
 
 The following examples show how to create methods:
 
-```go
+```go copy
 type Vertex struct {
     X float64 `json:"x"`
     Y float64 `json:"y"`
@@ -201,7 +201,7 @@ func main() {
 ```
 You can access the values of the *receiver* using `.`. The *receiver* type can also be a pointer, allowing modification of the *receiver*'s fields. However, if the pointer is `nil`, it will result in an error.
 
-```go
+```go copy
 type Vertex struct {
     X float64 `json:"x"`
     Y float64 `json:"y"`

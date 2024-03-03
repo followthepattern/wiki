@@ -4,7 +4,7 @@
 
 Channels are declared using the `chan` keyword. You can initialize a **channel**, using `make`, similar to initializing a `map` or `slice`.
 
-```go
+```go copy
 channel := make(chan Type)
 ```
 
@@ -12,7 +12,7 @@ Where `Type` can be a built-in type, an interface, or a structure. In some cases
 
 Creating an `int` type *channel*:
 
-```go
+```go copy
 channel := make(chan int)
 ```
 
@@ -20,7 +20,7 @@ channel := make(chan int)
 
 Data can be sent and received using the `<-` operator. If the arrow (`<-`) appears before the *channel* variable, it indicates data reading: `<-ch`, whereas in other cases, it signifies data sending: `ch <-`. In the following example, a `string` type *channel* is used to exchange messages between *goroutines*, followed by a simple print statement.
 
-```go
+```go copy
 package main
 
 import (
@@ -43,7 +43,7 @@ You can run the above code [here](https://goplay.followthepattern.net/snippet/p2
 
 The `ch` *channel* will block the involved goroutines until the respective goroutine plans to use the channel for communication. By default, the channel does not have memory, so all sent data must be read on the receiving end, or else it won't unblock.
 
-```go
+```go copy
 func main() {
 	ch := make(chan string)
 
@@ -63,7 +63,7 @@ You can run the above code [here](https://goplay.followthepattern.net/snippet/2Z
 
 If not all data is read, a `lock` occurs, as seen in the example below. The main goroutine sends only two values, but the secondary goroutine plans to read further.
 
-```go
+```go copy
 package main
 
 import (
@@ -93,7 +93,7 @@ If the `lock` occurs in the secondary goroutine, the application might terminate
 
 Deadlock can also occur when the receiving goroutine expects more data than what is actually sent, as demonstrated in the following example:
 
-```go
+```go copy
 package main
 
 import (
@@ -120,7 +120,7 @@ You can run the above code [here](https://goplay.followthepattern.net/snippet/fP
 ## Buffered Channels
 A *buffered channel* is a channel with storage capacity. It works similarly to the default *unbuffered channel* but with the difference that the sender does not have to wait for the data sent to be read on the receiving end until the *channel*'s capacity is filled. The way to create it is similar to creating an `array` type, and you also need to use the built-in `make` function.
 
-```go
+```go copy
 channel := make(chan Type, size int)
 ```
 
@@ -128,7 +128,7 @@ Where `Type` can be a built-in type, an interface, or a structure. In some cases
 
 The following example revises a previous code snippet that resulted in a `deadlock`. This time, the *channel*'s capacity will be 1, allowing the sending thread to continue until its capacity is filled.
 
-```go
+```go copy
 package main
 
 import (
@@ -153,7 +153,7 @@ You can run the above example [here](https://goplay.followthepattern.net/snippet
 
 However, just because this code snippet won't terminate with an error doesn't mean it's a good design. Not only does data remain unprocessed, but further data sending can still trigger a `deadlock` if it exceeds the *channel*'s capacity. The following code snippet illustrates this scenario:
 
-```go
+```go copy
 package main
 
 import (
@@ -181,7 +181,7 @@ The direction of a *channel* can also be specified, making the program safer, as
 
 *Channel* for reading only:
 
-```go
+```go copy
 func readValuesOnly(ch <-chan bool) {
 	fmt.Println(<-ch)
 }
@@ -189,7 +189,7 @@ func readValuesOnly(ch <-chan bool) {
 
 *Channel* for sending only:
 
-```go
+```go copy
 func sendValuesOnly(ch chan<- struct{}) {
 	ch <- struct{}{}
 }
@@ -199,7 +199,7 @@ An *empty struct* doesn't occupy memory and can be used as a signaling value, fo
 
 The following code combines the above cases in one example:
 
-```go
+```go copy
 package main
 
 import (
@@ -235,7 +235,7 @@ The `ch` variable is a bidirectional *channel*, which is converted into a one-di
 
 Another useful feature of Golang for controlling concurrent processes is the ability to iterate over *channel* variables, allowing continuous data reading from a specific *channel* until it is closed. To close a *channel*, you should use the `close` function. It's essential to note that once a *channel* is closed, you can no longer send or receive data through it, and attempting to close it again will result in a runtime error.
 
-```go
+```go copy
 package main
 
 import (
@@ -270,7 +270,7 @@ Closing a *channel* has its own dangers, such as closing it multiple times or at
 
 The following code demonstrates how to do this, similar to checking a type or a map key:
 
-```go
+```go copy
 package main
 
 import "fmt"
@@ -293,7 +293,7 @@ As a general rule, it's advisable for the party sending data to close the *chann
 
 In the following code snippet, you can see an attempt to close the `ch` channel multiple times, resulting in a panic and application termination:
 
-```go
+```go copy
 package main
 
 import (
@@ -323,7 +323,7 @@ You can run the above code [here](https://goplay.followthepattern.net/snippet/tF
 
 In the following code snippet, it attempts to send a value on a closed *channel*, which results in a panic and application termination:
 
-```go
+```go copy
 package main
 
 import (

@@ -30,7 +30,7 @@ This has the following advantages:
 
 A **goroutine** can be created using the `go` keyword, which should be followed by a function call. It looks like this:
 
-```go
+```go copy
 func main() {
 	go func() {
 		// code
@@ -43,7 +43,7 @@ In the example above, there is an anonymous function, which will run in concurre
 
 In the code snippet below, the `print` function is called twice, once in a **goroutine** and once on the main **goroutine**.
 
-```go
+```go copy
 package main
 
 import (

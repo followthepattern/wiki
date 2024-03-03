@@ -15,7 +15,7 @@ In the Golang programming language, `select` is a crucial feature for implementi
 When multiple concurrent operations arrive at a `select`, it will choose one arbitrarily, not necessarily the first defined case.
 
 **General syntax**
-```go
+```go copy
 select {
 	case value := <- channel:
 		// code, runs if this channel has been selected
@@ -31,7 +31,7 @@ select {
 
 `select` will execute only the code associated with the branch that has been selected and ignore the others, much like a `switch`.
 
-```go
+```go copy
 package main
 
 import (
@@ -66,7 +66,7 @@ You can run the above example [here](https://goplay.followthepattern.net/snippet
 
 In the code above, a simple example of using `select` is demonstrated, where data is read from two **channel** variables. The order of data arrival determines which channel's data gets read. In this case, only the value from `ch1` is read. The value from `ch2` is not read.
 
-```go
+```go copy
 package main
 
 import (

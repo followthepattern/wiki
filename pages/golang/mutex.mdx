@@ -16,7 +16,7 @@ You can use `sync.Mutex` to lock a variable that multiple goroutines want to mod
 
 While this approach is widely used in other languages, Go recommends using **channels** for synchronization. However, in some cases, using a **Mutex** can be simpler. A prime example is implementing a **Counter**, which you can see in practise below:
 
-```go
+```go copy
 package main
 
 import (

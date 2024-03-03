@@ -19,7 +19,7 @@ A module is a collection of multiple Go packages that are built together. Typica
 A package is the smallest unit that can differentiate between public and private access. Every type, function, or constant definition can be exported to make it public, allowing other packages to access it, or it can be declared as private. The way to specify accessibility is by using capitalization. Definitions that start with an uppercase letter are public, while lowercase definitions indicate private access.
 
 `models/user.go`
-```go
+```go copy
 package models
 
 import "time"
@@ -40,7 +40,7 @@ func NewUser(name string) User {
 In the code above, the `User` type, `User.Name` field, and `NewUser` function are public, whereas `User.creationDate` is private.
 
 `main.go`
-```go
+```go copy
 func main() {
 	user := models.NewUser("X Jakab")
 	fmt.Println(user)

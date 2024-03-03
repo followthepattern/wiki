@@ -19,7 +19,7 @@ The `error` interface is used for organizing, propagating, and handling errors.
 
 Its implementation looks like this:
 
-```go
+```go copy
 type error interface {
     Error() string
 }
@@ -27,7 +27,7 @@ type error interface {
 
 From the code snippet above, you can see that the types are used for error handling must have a function named `Error`, which returns a `string`. This function will provide the error message.
 
-```go
+```go copy
 type CustomError struct {
     Msg string
 }
@@ -49,7 +49,7 @@ func main() {
 ## Defer
 In a typical Go application, expressions are executed sequentially, one after the other.
 
-```go
+```go copy
 fmt.Println("Follow")
 fmt.Println("The")
 fmt.Println("Pattern!")
@@ -57,7 +57,7 @@ fmt.Println("Pattern!")
 
 There are exceptions, such as `defer`. Functions marked with `defer` don't execute when they are called but instead run after the invoking function has finished. If multiple `defer` functions are used, their execution order will be the reverse of their calls.
 
-```go
+```go copy
 func main() {
     defer fmt.Println("Follow")
     defer fmt.Println("The")
@@ -70,7 +70,7 @@ func main() {
 
 The practical advantage of the `defer` keyword is that it allows you to use an initializing function and its associated closing logic closely together. Anonymous functions are often passed to `defer` because there's no need to define a new function explicitly. However, a function call must always follow the `defer` keyword.
 
-```go
+```go copy
 func main() {
     f, err := os.Create("/tmp/fp.txt")
     if err != nil {
@@ -94,7 +94,7 @@ In the code for creating a file, the `f` variable references the opened file. Af
 ## Panic
 If you aim to achieve error handling behavior similar to other languages, you can use the `panic` function. Its purpose is to immediately terminate the application upon invocation while also reporting the error. This includes printing the error message, displaying a goroutine trace, and setting the application's exit status to a non-zero value.
 
-```go
+```go copy
 func main() {
     _, err := os.Open("/tmp/nonexisting")
     if err != nil {
@@ -108,7 +108,7 @@ In the code snippet above, the `panic` function is used, passing the value of th
 
 The runtime can also trigger a `panic` if the situation requires it.
 
-```go
+```go copy
 func main() {
     a := 1
     b := 0
@@ -123,7 +123,7 @@ Dividing by zero will result in a panic, causing the application to terminate wi
 ## Recover
 `recover` is a built-in function that regains control over a goroutine where a `panic` function was called. `recover` only works within a `defer` block. During normal execution, the `recover` function always returns `nil` and has no other side effects. If a `panic` occurs in the same goroutine where `recover` is called, it captures the error contained within the `panic` and stores it in the `err` variable.
 
-```go
+```go copy
 package main
 
 import "fmt"

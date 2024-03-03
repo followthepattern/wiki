@@ -14,26 +14,26 @@ In Go (Golang) programming language, a pointer is a variable that stores the mem
 
 You can declare a pointer type using the `*` symbol along with the associated type. For example, a pointer to an integer value looks like this:
 
-```go
+```go copy
 var p *int
 ```
 
 You can create a pointer from an existing variable using the `&` operator:
 
-```go
+```go copy
 i := 39
 p = &i
 ```
 
 Alternatively, you can use the `new` built-in function to create a pointer initialized with the default value for the pointer type:
 
-```go
+```go copy
 i := new(int)
 ```
 
 To access the value pointed to by a pointer, you can use the `*` operator:
 
-```go
+```go copy
 name := "test"
 p := &name
 original := *p
