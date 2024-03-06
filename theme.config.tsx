@@ -11,7 +11,7 @@ const config: DocsThemeConfig = {
     link: 'https://discord.com/invite/kDuKyG4EET',
   },
   footer: {
-    text: 'Follow The Pattern WIKI',
+    text: '© 2024 Follow The Pattern. All rights reserved.',
   },
   docsRepositoryBase: 'https://github.com/followthepattern/wiki/tree/main/',
 }
