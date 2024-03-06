@@ -1,8 +1,9 @@
 import React from 'react'
 import { DocsThemeConfig } from 'nextra-theme-docs'
+import Logo from './components/logo/Logo'
 
 const config: DocsThemeConfig = {
-  logo: <span>Follow The Pattern WIKI</span>,
+  logo: <Logo />,
   project: {
     link: 'https://github.com/followthepattern/wiki',
   },
