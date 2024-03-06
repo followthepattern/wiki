@@ -16,4 +16,11 @@ const config: DocsThemeConfig = {
   docsRepositoryBase: 'https://github.com/followthepattern/wiki/tree/main/',
 }
 
-export default config
+export default {
+  useNextSeoProps() {
+    return {
+      titleTemplate: '%s – Follow The Pattern'
+    }
+  },
+  config,
+}
