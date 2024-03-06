@@ -14,13 +14,11 @@ const config: DocsThemeConfig = {
     text: '© 2024 Follow The Pattern. All rights reserved.',
   },
   docsRepositoryBase: 'https://github.com/followthepattern/wiki/tree/main/',
-}
-
-export default {
   useNextSeoProps() {
     return {
       titleTemplate: '%s – Follow The Pattern'
     }
   },
-  config,
 }
+
+export default config;
