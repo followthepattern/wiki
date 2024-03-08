@@ -9,5 +9,16 @@
     "errors": "Error handling",
     "module-and-package": "Module & Package",
     "standard-library": "Standard Library",
-    "generics": "Generics"
+    "generics": "Generics",
+    "---": {
+        "type": "separator"
+    },
+    "concurrency": "What is concurrency?",
+    "goroutine": "Goroutine",
+    "channels": "Channels",
+    "select": "Select",
+    "sync": "Sync package",
+    "waitgroup": "WaitGroup",
+    "mutex": "Mutex",
+    "race": "Race"
 }
