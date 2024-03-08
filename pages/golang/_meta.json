@@ -1,0 +1,13 @@
+{
+    "get-started": "Get Started",
+    "primitives": "Primitive Types",
+    "composite-types": "Composite Types",
+    "branches-and-loops": "Branches and Loops",
+    "functions": "Functions",
+    "pointers": "Pointers",
+    "interface": "Interface",
+    "errors": "Error handling",
+    "module-and-package": "Module & Package",
+    "standard-library": "Standard Library",
+    "generics": "Generics"
+}
