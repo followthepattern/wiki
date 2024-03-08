@@ -10,9 +10,6 @@
     "module-and-package": "Module & Package",
     "standard-library": "Standard Library",
     "generics": "Generics",
-    "---": {
-        "type": "separator"
-    },
     "concurrency": "What is concurrency?",
     "goroutine": "Goroutine",
     "channels": "Channels",
