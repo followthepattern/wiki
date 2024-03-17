@@ -1,6 +1,29 @@
 {
   "index": "Introduction",
-  "golang": "Golang",
+  "-- Golang": {
+    "type": "separator",
+    "title": "Golang"
+  },
+  "get-started": "Get Started",
+  "primitives": "Primitive Types",
+  "composite-types": "Composite Types",
+  "branches-and-loops": "Branches and Loops",
+  "functions": "Functions",
+  "pointers": "Pointers",
+  "interface": "Interface",
+  "errors": "Error handling",
+  "module-and-package": "Module & Package",
+  "standard-library": "Standard Library",
+  "generics": "Generics",
+  "concurrency": "What is concurrency?",
+  "goroutine": "Goroutine",
+  "channels": "Channels",
+  "select": "Select",
+  "sync": "Sync package",
+  "waitgroup": "WaitGroup",
+  "mutex": "Mutex",
+  "race": "Race",
+  "testing": "Tests in Golang",
   "about": {
     "title": "About",
     "type": "page"
