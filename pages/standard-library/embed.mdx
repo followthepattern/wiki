@@ -1,0 +1,20 @@
+# Embed your text file into a Go binary
+
+When you embedding your text file into binary you don't have to worry about makin available, where you deploy it different places.
+
+```go {4,8}
+package main
+
+import (
+    "embed"
+    "fmt"
+)
+
+//go:embed mail.tmpl
+var mail string
+
+func main() {
+    fmt.Println("Contents of mail.tmpl")
+    fmt.Println(mail)
+}
+```

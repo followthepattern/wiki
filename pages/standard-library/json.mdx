@@ -1,0 +1,114 @@
+---
+title: JSON package
+description: json package implements JSON encoding and decoding functions
+---
+
+# `json` package
+
+The `encoding/json` package implements JSON encoding and decoding functions following the [RFC 7159](https://www.rfc-editor.org/rfc/rfc7159) standard.
+
+[official docs](https://pkg.go.dev/encoding/json)
+
+## Examples of Marshaling Go struct to JSON
+
+The following code snippet demonstrates converting a list of `structs` to JSON format:
+
+```go copy
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+)
+
+func main() {
+	type Car struct {
+		Name, Model, Color string
+		WeightInKg         int
+	}
+
+	cars := []Car{{
+		Name:       "Toyota",
+		Model:      "Corolla",
+		Color:      "Grey",
+		WeightInKg: 1160,
+	}, {
+		Name:       "Kia",
+		Model:      "C'eed",
+		Color:      "Blue",
+		WeightInKg: 1425,
+	}, {
+		Name:       "Opel",
+		Model:      "Astra",
+		Color:      "Beige",
+		WeightInKg: 1180,
+	}}
+	bytes, err := json.Marshal(cars)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(bytes))
+}
+```
+
+After formatting, the console output will look like this:
+
+```json
+[
+   {
+      "Name":"Toyota",
+      "Model":"Corolla",
+      "Color":"Grey",
+      "WeightInKg":1160
+   },
+   {
+      "Name":"Kia",
+      "Model":"C'eed",
+      "Color":"Blue",
+      "WeightInKg":1425
+   },
+   {
+      "Name":"Opel",
+      "Model":"Astra",
+      "Color":"Beige",
+      "WeightInKg":1180
+   }
+]
+```
+
+You can run the code snippet in your browser at this [link](https://goplay.followthepattern.net/snippet/8JukI6RBJsc).
+
+To read JSON into a `struct` value in Go, you can use the `Unmarshal` function. It's important to pass the `target` value as a reference because any changes made to the value within the method must also be reflected outside the function.
+
+Here's the code in English with the Markdown format:
+
+```go copy
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+)
+
+func main() {
+	var jsonBlob = []byte(`[
+	{"Name": "John", "Age": 18},
+	{"Name": "James", "Age": 32},
+	{"Name": "David", "Age": 26}
+]`)
+	type User struct {
+		Name string
+		Age  int
+	}
+	var users []User
+	err := json.Unmarshal(jsonBlob, &users)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("%+v", users)
+}
+```
+
+You can run it in a browser [here](https://goplay.followthepattern.net/snippet/ZwvKrnCKQn4).

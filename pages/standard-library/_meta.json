@@ -1,0 +1,8 @@
+{
+    "fmt": "fmt",
+    "json": "json",
+    "os": "os",
+    "io": "io",
+    "slog": "slog",
+    "embed": "embed"
+}
