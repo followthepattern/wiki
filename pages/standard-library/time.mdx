@@ -1,0 +1,53 @@
+---
+title: Time package
+description: Time package provides functionalities for measuring and displaying time
+---
+
+# `time` package
+
+The `time` package provides functionalities for measuring and displaying time.
+
+[official doc](https://pkg.go.dev/time)
+
+The code snippet below demonstrates various examples of using the `time` package, and you can try it out [here](https://goplay.followthepattern.net/snippet/xLH0YjKpgnx).
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"log"
+	"time"
+)
+
+func main() {
+	now := time.Now()
+	fmt.Println(now) // prints the current time
+
+	t := time.Date(2023, time.January, 3, 14, 26, 23, 0, time.UTC)
+	fmt.Println(t) // 2023-01-03 14:26:23 +0000 UTC
+
+	start := time.Now()         // start time
+	time.Sleep(time.Second * 2) // Sleeps for 2 seconds
+	end := time.Now()           // end time
+
+	duration := end.Sub(start) // calculates the time difference between start and end
+	fmt.Println(duration)      // prints the time difference
+
+	t1 := time.Date(2020, time.October, 11, 9, 54, 32, 0, time.UTC)
+	t2 := t1.Add(time.Minute * 3) // Adds 3 minutes to t1
+
+	if t1.Before(t2) {
+		fmt.Println("t1 is before t2")
+	}
+
+	t1Str := t1.Format(time.RFC822Z) // 11 Oct 20 09:54 +0000
+	fmt.Println(t1Str)
+
+	t1Parsed, err := time.Parse(time.RFC1123, "Sun, 11 Oct 2020 09:54:32 UTC")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(t1Parsed)
+}
+```

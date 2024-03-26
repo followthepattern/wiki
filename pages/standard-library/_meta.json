@@ -4,5 +4,6 @@
     "os": "os",
     "io": "io",
     "slog": "slog",
+    "time": "time",
     "embed": "embed"
 }
