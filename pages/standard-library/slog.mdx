@@ -1,0 +1,32 @@
+---
+title: SLOG package
+description: The slog package in Golang is a structured logging library, offering a way to log messages in a structured form
+---
+
+# `slog` package 
+
+The slog package in Golang is a structured logging library, offering a way to log messages in a structured form.
+
+[official docs](https://go.dev/blog/slog)
+
+## Example of using `slog` package
+
+```go copy
+package main
+
+import (
+	"log/slog"
+	"os"
+)
+
+func main() {
+	logger := slog.New(slog.NewJSONHandler(os.Stdout, nil))
+
+	ctxLogger := logger.With("Company", "FollowThePattern")
+	// {"time":"2009-11-10T23:00:00Z","level":"INFO","msg":"Learning started!","Company":"FollowThePattern"}
+
+	ctxLogger.Info("Learning started!")
+}
+```
+
+You can run the code in your browser [here](https://goplay.followthepattern.net/snippet/yKPM_hwIQPV).

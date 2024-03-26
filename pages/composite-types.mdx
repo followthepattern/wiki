@@ -109,6 +109,35 @@ Individual elements can be accessed using indexing, similar to an `array`.
 item := slice[1]
 ```
 
+### Adding an Item to a `nil` Slice in Go
+
+In Go, a `nil` slice is a slice that has been declared but not initialized with any values. Despite being `nil`, you can still use the built-in `append` function to add items to it. When you append an item to a `nil` slice, Go automatically allocates memory for the slice and adds the item to it. As a result, the slice will no longer be `nil` and will have a length of 1.
+
+Here's an example to demonstrate this behavior:
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	var list []int = nil // Declare a nil slice of int
+
+	list = append(list, 1) // Append an item to the nil slice
+
+	fmt.Println(list) // Output: [1]
+}
+```
+
+In this example, `list` is initially a `nil` slice.
+After appending the integer `1` to it, the slice becomes `[1]` with a length of 1.
+This demonstrates that the `append` function can handle `nil` slices gracefully, making it easy to work with slices that may not be initialized at the time of declaration.
+
+
+Play with the example [here](https://goplay.followthepattern.net/snippet/_DcacmEyUs8)
+
 ## Map
 
 In the Go programming language, a `map` is an implementation of a hash table.

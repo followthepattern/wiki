@@ -1,0 +1,59 @@
+# Testing with Ginkgo
+
+Ginkgo is a testing framework written in Go programming language using *Behaviour Driven Development* approach.
+
+To learn more about Ginkgo check out the [docs](https://onsi.github.io/ginkgo/)
+
+## Writing a simple unit test for verifying a method
+
+This example below shows how you can use Gingko with testing `FullName` method of the given `User` struct
+
+```go copy {2, 9}
+var _ = Describe("Users", func() {
+  It("can retrieve with a user full name", func() {
+    user := &users.User{
+      FirstName: "Brandie",
+      LastName: "Monday",
+      Age: 38,
+    }
+
+    Expect(user.FullName()).Should(Equal("Brandie Monday"))
+  })
+})
+```
+
+## Using container nodes to organizing testcases
+The following example uses multiple container nodes to organize tests. The containers are `Describe`, `Context`, `BeforeEach` and `It`.
+`Describe` and `Context` gives a context for running tests on functionailties of the given entity.
+Using containers allows you to structure your actions and share variables that you only create on those containers where it will be used. 
+
+While `It` behaves as a leaf node that tries to exercise your code and verify it. `BeforeEach` will run as many times as `It` node described in the defined context.
+Top level `BeforeEach` will run just before every `It` execution.
+
+```go {4,12,17}
+var _ = Describe("User Model", func() {
+	var user models.User
+
+	BeforeEach(func() {
+		user = models.User{
+			Name:  "John Doe",
+			Email: "johndoe@example.com",
+			Age:   30,
+		}
+	})
+
+	Context("when the user is initialized", func() {
+		It("should have a name", func() {
+			Expect(user.Name).To(Equal("John Doe"))
+		})
+
+		It("should have an email", func() {
+			Expect(user.Email).To(Equal("johndoe@example.com"))
+		})
+
+		It("should have an age", func() {
+			Expect(user.Age).To(BeNumerically(">", 0))
+		})
+	})
+})
+```

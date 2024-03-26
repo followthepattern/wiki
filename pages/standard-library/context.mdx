@@ -1,0 +1,132 @@
+---
+title: CONTEXT package
+description: The context package defines the `Context` type, which carries deadlines, cancellation signals, and other request-scoped values across API boundaries and between processes.
+---
+
+# `context` package
+
+The `context` package defines the `Context` type, which carries deadlines, cancellation signals, and other request-scoped values across API boundaries and between processes.
+
+This package introduces the `Context` type, which can carry variables related to a specific request, expiration times, or signals for indicating the completion of execution.
+
+By associating values with the `Context` type, it is easy to express whether a specific call has a successful authentication.
+
+[official doc](https://pkg.go.dev/context)
+
+The following example demonstrates how to add a variable to the `Context` variable that stores information about the logged-in user:
+
+```go copy
+package main
+
+import (
+	"context"
+	"fmt"
+)
+
+func main() {
+	type ContextKey string
+
+	user := struct {
+		Name string
+	}{
+		Name: "John",
+	}
+
+	userContextKey := ContextKey("User")
+	ctx := context.WithValue(context.Background(), userContextKey, user)
+
+	if v := ctx.Value(userContextKey); v != nil {
+		fmt.Println("Found value:", v)
+		return
+	}
+}
+```
+
+You can run the code snippet above [here](https://goplay.followthepattern.net/snippet/sIXst1kglTV).
+
+A `Context` variable can be created along with a `cancel` function, which can be used to signal the termination of a request:
+
+```go copy
+package main
+
+import (
+	"context"
+	"fmt"
+	"time"
+)
+
+func main() {
+	// The cancel function will cancel the context
+	ctx, cancel := context.WithCancel(context.Background())
+
+	go func() {
+		fmt.Println("Waiting for context cancellation in the goroutine...")
+		<-ctx.Done() // The function continues as soon as the context is cancelled
+	}()
+
+	time.Sleep(time.Second) // The main goroutine sleeps for a second
+	fmt.Println("Cancelling the context")
+	cancel() // Cancels the context
+}
+```
+
+You can run the code snippet above [here](https://goplay.followthepattern.net/snippet/HRZyohQMawu).
+
+The `Context` type can also be used to define deadlines, signaling the termination of a call:
+
+```go copy
+package main
+
+import (
+	"context"
+	"fmt"
+	"time"
+)
+
+func main() {
+	ctx := context.Background()
+
+	deadline := time.Now().Add(time.Second * 1)
+	ctx, cancel := context.WithDeadline(ctx, deadline)
+
+	// The ctx will be expired, but it is a good practice to call its
+	// cancellation function in any case to avoid keeping its parent alive longer than necessary.
+	defer cancel()
+
+	fmt.Println("Waiting for the deadline")
+	// Blocks until it receives a value
+	// from the context's channel
+	<-ctx.Done()
+	fmt.Println(ctx.Err())
+}
+```
+
+You can run the code snippet above [here](https://goplay.followthepattern.net/snippet/dzWcQ9NkeWk).
+
+A `Context` variable can also be created with a predefined timeout value, which signals the termination of a call. The difference from the previous example is that you specify a time interval rather than a specific time:
+
+```go copy
+package main
+
+import (
+	"context"
+	"fmt"
+	"time"
+)
+
+func main() {
+	ctx := context.Background()
+
+	ctx, cancel := context.WithTimeout(ctx, time.Second*1) // Sets the timeout to 1 second
+	defer cancel()
+
+	select {
+	case <-time.After(10 * time.Second):
+		fmt.Println("Overslept")
+	case <-ctx.Done():
+		fmt.Println(ctx.Err()) // Prints "context deadline exceeded"
+	}
+}
+```
+
+You can run the code snippet above [here](https://goplay.followthepattern.net/snippet/h0BHfqBk1Id).

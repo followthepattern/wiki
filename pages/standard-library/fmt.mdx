@@ -1,0 +1,96 @@
+---
+title: FMT package
+description: FMT package implements I/O formatting 
+---
+
+# `fmt` package
+The `fmt` package implements I/O formatting following the example of C's `printf` and `scanf`.
+
+[docs](https://pkg.go.dev/fmt)
+
+## How to use `fmt` package?
+
+The following code snippet contains some examples of using `fmt` functions, which you can try [here](https://goplay.followthepattern.net/snippet/GPVAn0TXK_8).
+
+```go copy
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	// Println writes to standard output.
+	fmt.Println("Follow The Pattern")   // Follow The Pattern
+	fmt.Println("Follow", 0, "Pattern") // Follow 0 Pattern
+
+	fmt.Print("Follow The Pattern") // Prints to standard output without newline
+	fmt.Print(" Follow The Pattern\n")
+
+	localStruct := struct {
+		Count int
+		Title string
+	}{1, "FP"}
+
+	fmt.Printf("Integer: %d, String: %s, type of literal: %T, Value: %v, Struct type: %T \n",
+		1, "hello", int64(1), localStruct, localStruct)
+	// Integer: 1, String: hello, type of literal: int64, Value: {1 FP}, Struct type: struct { Count int; Title string } ß
+
+	// prints literal percent sign, consume no value
+	fmt.Printf("Percent sign: %%\n") // %
+
+	the := 0
+	text := fmt.Sprint("Follow", the, "Pattern") // stores the string into variable, without white space
+	fmt.Println(text)                            // Follow0Pattern
+
+	text = fmt.Sprintf("Integer: %d, String: %s, Value type: %T, Value: %v", 1, "hello", int64(1), localStruct)
+	fmt.Println(text) // Integer: 1, String: hello, Value type: int64, Value: {1 FP}
+}
+```
+
+## Using `fmt` package with packages that implements `io.Writer` interface
+
+The `os.File` type implements the `io.Writer` interface, allowing it to be used together with `fmt` functions. It will behave the same way as if you were writing to the console.
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+)
+
+func main() {
+	localStruct := struct {
+		Count int
+		Title string
+	}{1, "FP"}
+
+	// fmt.Fprint can print to any interface that implements io.Writer like os.File
+	file, err := os.Create("./dump.txt")
+	if err != nil {
+		log.Fatal(err) // exit from the application while it prints the error
+	}
+
+	fmt.Fprintln(file, "Follow The Pattern")
+	fmt.Fprintln(file, "Follow", 0, "Pattern")
+	fmt.Fprintf(file, "Integer: %d, String: %s, type of literal: %T, Value: %v, Struct Type: %T \n",
+		1, "hello", int64(1), localStruct, localStruct)
+
+	// File content
+	/*
+		Follow The Pattern
+		Follow 0 Pattern
+		Integer: 1, String: hello, type of literal: int64, Value: {1 FP}, Struct Type: struct { Count int; Title string }
+
+	*/
+
+	err = file.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+You can run the code in your browser [here](https://goplay.followthepattern.net/snippet/G27eNx7jjPG).

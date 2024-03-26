@@ -1,0 +1,75 @@
+---
+title: SYNC package
+description: The sync package implements basic synchronization primitives such as Once, WaitGroup and Mutex
+
+---
+
+# `sync` package
+
+[official docs](https://pkg.go.dev/sync)
+
+The `sync` package implements basic synchronization primitives such as `Once`, `WaitGroup`, and `Mutex`. When developing higher-level synchronization, it's recommended to use `channel` types.
+
+Concurrency, parallelism, and synchronization are complex topics. The code snippets below provide brief examples of the primitives provided by Go, but for a deeper understanding, consider the [Go courses](https://followthepattern.net/) offered by Follow The Pattern.
+
+Here's a simple example of using `WaitGroup`:
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	var wg sync.WaitGroup
+	wg.Add(1)
+
+	go func() {
+		fmt.Println("Follow The Pattern makes your learning effective!")
+		time.Sleep(2 * time.Second)
+		wg.Done() // subtracts 1 from the WaitGroup counter
+	}()
+	wg.Wait() // waits for the WaitGroup counter to become zero
+	fmt.Println("Program finished!")
+}
+```
+
+You can run the above code in your browser [here](https://goplay.followthepattern.net/snippet/0k2ZIpg_l0p).
+
+Here's an example demonstrating the use of `sync.Mutex`:
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"sync"
+	"time"
+)
+
+func main() {
+	type Counter struct {
+		sync.Mutex
+		value int
+	}
+
+	counter := Counter{}
+	for i := 0; i < 10; i++ {
+		go func(i int) {
+			counter.Lock() // lock the counter to modify it safely
+			counter.value++
+			defer counter.Unlock() // unlock the counter
+		}(i)
+	}
+	time.Sleep(time.Second)
+	counter.Lock() // lock the counter to print its value
+	defer counter.Unlock() // unlock the counter when the execution is finished
+
+	fmt.Println("Counter:", counter.value)
+}
+```
+
+You can run the above code in your browser [here](https://goplay.followthepattern.net/snippet/eMgB5ZaO2jV)

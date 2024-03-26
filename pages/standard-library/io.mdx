@@ -1,0 +1,44 @@
+---
+title: IO package
+description: IO package provides basic interfaces for I/O primitives
+---
+
+# IO package
+
+The `io` package provides basic interfaces for I/O primitives, such as reading and writing interfaces. Since these are low-level implementations, they are not inherently safe for concurrent execution.
+
+[official docs](https://pkg.go.dev/io)
+
+## Example of using `io.Reader`
+
+The code snippet below demonstrates the use of `io.Reader` and `io.Writer` and can be tried out [here](https://goplay.followthepattern.net/snippet/bs9__lzECCD).
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"io"
+	"log"
+	"strings"
+)
+
+func main() {
+	// io.Reader implements the standard Read method
+	var reader io.Reader = strings.NewReader("Follow The Pattern makes learning efficient!")
+	b, err := io.ReadAll(reader)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println(string(b))
+
+	stringBuilder := strings.Builder{}
+
+	// io.Writer implements the standard Write method
+	var writer io.Writer = &stringBuilder
+
+	fmt.Fprint(writer, "Follow The Pattern")
+
+	fmt.Println(stringBuilder.String())
+}
+```

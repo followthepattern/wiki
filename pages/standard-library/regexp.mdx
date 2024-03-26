@@ -1,0 +1,71 @@
+---
+title: REGEXP package
+description: The regexp package implements regular expression search
+---
+
+# `regexp` package
+
+The `regexp` package implements regular expression search. Its syntax follows the pattern of Perl and Python, more specifically the [re2syntax](https://github.com/google/re2/wiki/Syntax) format.
+
+[official doc](https://pkg.go.dev/regexp)
+
+In the following code snippet, you can see an email regex validation that aims to filter out incorrectly formatted email addresses:
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"regexp"
+)
+
+func main() {
+	// Build a regular expression variable to verify the given string
+	var emailRegexp *regexp.Regexp = regexp.MustCompile(`^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$`)
+
+	fmt.Println("Checking valid regexps...")
+
+	emails := []string{
+		"info@followthepattern.net",
+		"@followthepattern.net",
+		"info@followthepattern",
+	}
+	for _, mail := range emails {
+		// MatchString returns true if the given string passes the match with the regexp
+		fmt.Println(mail, emailRegexp.MatchString(mail))
+	}
+}
+```
+
+You can run the above example [here](https://goplay.followthepattern.net/snippet/UJvT_tFE3XD).
+
+In this code snippet, we extract values from regexp groups, where a specific format string needs to be parsed to extract valid characters:
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"regexp"
+)
+
+func main() {
+	// Verification code has three elements that need to be parsed
+	verificationCode := "e035f36e-b45f4b89a31e-58e1b05706e3"
+
+	// Matching regexp
+	regexp := regexp.MustCompile(`(?P<part1>[a-z0-9]+)-(?P<part2>[a-z0-9]+)-(?P<part3>[a-z0-9]+)`)
+	fmt.Println("Is Match:", regexp.MatchString(verificationCode))
+
+	// Read group values into an array
+	matches := regexp.FindStringSubmatch(verificationCode)
+
+	// Find the index of the group by group name
+	part2 := regexp.SubexpIndex("part2")
+
+	fmt.Println("Part2 Index:", part2)
+	fmt.Println(matches[part2])
+}
+```
+
+You can run this code snippet [here](https://goplay.followthepattern.net/snippet/RkxshCC-lLm).

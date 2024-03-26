@@ -1,0 +1,87 @@
+---
+title: OS package
+description: The os package contains platform-independent functions for interacting with operating system functionalities
+---
+
+# `os` package
+
+The `os` package contains platform-independent functions for interacting with operating system functionalities. The following code snippets provide a few simple examples of using environment variables.
+
+[official docs](https://pkg.go.dev/os)
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+)
+
+func main() {
+	// Read an environment variable by key
+	path := os.Getenv("PATH")
+	fmt.Println(path)
+
+	// Set environment variables by key
+	os.Setenv("DB_USERNAME", "my_db_username")
+	os.Setenv("DB_PASSWORD", "my_secret_db_password")
+
+	// Retrieve and print environment variables
+	dbUsername := os.Getenv("DB_USERNAME")
+	fmt.Println(dbUsername)
+
+	dbPassword := os.Getenv("DB_PASSWORD")
+	fmt.Println(dbPassword)
+
+	// Get the executable path
+	executablePath, err := os.Executable()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Print the executable path
+	fmt.Println(executablePath)
+}
+```
+
+You can try out this code snippet [here](https://goplay.followthepattern.net/snippet/XjjnslCALLK).
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"log"
+	"os"
+)
+
+func main() {
+	file, err := os.Create("./dump.txt") // Create a new file
+	if err != nil {
+		log.Fatal(err) // Exit the application while printing the error
+	}
+
+	fmt.Fprintln(file, "Follow The Pattern") // Write to the file
+	err = file.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	file, err = os.Open("./dump.txt") // Open the created file
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	data := make([]byte, 50)
+	count, err := file.Read(data) // Read from the file
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	text := data[:count]
+	fmt.Printf("count: %d characters: %q string: %s", count, text, text) // Print the file content
+}
+```
+
+You can run the code in your browser [here](https://goplay.followthepattern.net/snippet/WjPLqDMq9Bb).
