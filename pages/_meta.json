@@ -5,16 +5,37 @@
     "title": "Golang"
   },
   "get-started": "Get Started",
+  "-- Basic-Syntax": {
+    "type": "separator",
+    "title": "Basic & Syntax"
+  },
   "primitives": "Primitive Types",
-  "composite-types": "Composite Types",
   "branches-and-loops": "Branches and Loops",
   "functions": "Functions",
   "pointers": "Pointers",
+  "-- Error-Handling": {
+    "type": "separator",
+    "title": "Error Handling"
+  },
+  "errors": "Errors",
+  "-- Interface-Composition": {
+    "type": "separator",
+    "title": "Interface & Composition"
+  },
+  "composite-types": "Composite Types",
   "interface": "Interface",
-  "errors": "Error handling",
-  "module-and-package": "Module & Package",
-  "standard-library": "Standard Library",
   "generics": "Generics",
+  "-- Packages-Modules": {
+    "type": "separator",
+    "title": "Packages & Modules"
+  },
+  "module": "Module",
+  "package": "Package",
+  "standard-library": "Standard Library",
+  "-- Concurrency": {
+    "type": "separator",
+    "title": "Concurrency"
+  },
   "concurrency": "What is concurrency?",
   "goroutine": "Goroutine",
   "channels": "Channels",
@@ -23,7 +44,12 @@
   "waitgroup": "WaitGroup",
   "mutex": "Mutex",
   "race": "Race",
-  "testing": "Tests in Golang",
+  "-- Testing": {
+    "type": "separator",
+    "title": "Testing"
+  },
+  "ginkgo": "Ginkgo",
+  "gomega": "Gomega", 
   "about": {
     "title": "About",
     "type": "page"
