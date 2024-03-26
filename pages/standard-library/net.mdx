@@ -1,0 +1,31 @@
+---
+title: NET package
+description: The net package implements various network I/O interfaces, such as TCP/IP.
+---
+
+# `net` package
+
+The `net` package implements various network I/O interfaces, such as TCP/IP.
+
+[official doc](https://pkg.go.dev/net)
+
+In the following code snippet, you can find an example of running a small web service using the `net/http` package. You can gain a deeper understanding of this package by following the Go courses provided by Follow The Pattern:
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"log"
+	"net/http"
+)
+
+func main() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello Follow The Pattern!")
+	})
+	fmt.Println("Server running!")
+
+	log.Fatal(http.ListenAndServe(":8081", nil))
+}
+```

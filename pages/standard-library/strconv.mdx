@@ -1,0 +1,60 @@
+---
+title: STRCONV package
+description: The strconv package contains conversion functions that allow you to convert basic types to strings and vice versa.
+---
+
+# `strconv` package
+
+The `strconv` package contains conversion functions that allow you to convert basic types to strings and vice versa.
+
+[official doc](https://pkg.go.dev/strconv)
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"log"
+	"strconv"
+)
+
+func main() {
+	b, err := strconv.ParseBool("true")
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("type: %T\n", b) // type: bool
+
+	f, err := strconv.ParseFloat("3.1415", 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("type: %T\n", f) // type: float64
+
+	i, err := strconv.ParseInt("-10", 10, 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("type: %T\n", i) // type: int64
+
+	u, err := strconv.ParseUint("42", 10, 64)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("type: %T\n", u) // type: uint64
+
+	sb := strconv.FormatBool(true)
+	fmt.Printf("%T, %v\n", sb, sb) // string, true
+
+	sf := strconv.FormatFloat(3.141592653589793238, 'E', -1, 64)
+	fmt.Printf("%T, %v\n", sf, sf) // string, 3.141592653589793E+00
+
+	si := strconv.FormatInt(34, 10)
+	fmt.Printf("%T, %v\n", si, si) // string, 34
+
+	sui := strconv.FormatUint(uint64(29), 10)
+	fmt.Printf("%T, %v\n", sui, sui) // string, 29
+}
+```
+
+You can try it out [here](https://goplay.followthepattern.net/snippet/cy-QnbH6WCb).

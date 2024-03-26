@@ -5,5 +5,10 @@
     "io": "io",
     "slog": "slog",
     "time": "time",
+    "strconv": "strconv",
+    "sync":"sync",
+    "context":"context",
+    "net":"net",
+    "regexp":"regexp",
     "embed": "embed"
 }
