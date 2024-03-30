@@ -1,0 +1,102 @@
+---
+title: Gomega
+description: Gomega is a matcher and assertion library that helps you write test cases in a clear fashion.
+---
+
+# Gomega
+
+Gomega is a matcher and assertion library that helps you write test cases in a clear and understandable manner.
+
+[Official Documentation](https://onsi.github.io/gomega/)
+
+The goal is to write test cases that are easily comprehensible to everyone. Gomega's API is so well-designed that sometimes assertions can be read as if they were English sentences.
+
+In the following, I try to list the most used assertion functions and giving examples to it
+
+## Equal
+
+```go copy {12}
+package mypackage
+
+import (
+    . "github.com/onsi/gomega"
+    "testing"
+)
+
+func TestMyFunction(t *testing.T) {
+    RegisterTestingT(t)
+
+    result := MyFunction()
+    Expect(result).To(Equal("expected result"))
+}
+```
+In the following sections, I will try to list couple of commonly used assertion functions and provide examples for them.
+
+## Error
+
+
+In Golang, when we encounter an error, we don't throw an error like in other languages. Instead, we return it.
+It is a common pattern in the language for functions to have two return types: one for the value and the other for the error.
+
+To verify if the error is nil, we can use Gomega in the following way:
+
+```go copy {21}
+package main
+
+import (
+	"errors"
+	. "github.com/onsi/gomega"
+	"testing"
+)
+
+func mightReturnError(condition bool) (string, error) {
+	if condition {
+		return "", errors.New("an error occurred")
+	}
+	return "success", nil
+}
+
+func TestErrorCheck(t *testing.T) {
+	RegisterFailHandler(ginkgo.Fail)
+
+	result, err := mightReturnError(false)
+
+	Expect(err).Should(BeNil())
+	Expect(result).Should(Equal("success"))
+}
+```
+
+In this example, the `mightReturnError` function returns an error if the condition is true.
+In the test `TestErrorCheck`, we use Gomega to assert that `err` is `nil` and `result` is equal to `"success"` when the condition is false."
+
+> Notice, that you can use `Should` keyword instead of  `To`. It will improve the reading!
+
+### Using Succeed with error assertion
+It is possible to make the assertion more readable by using `Succeed` matcher along with `Should`.
+
+```go copy {20}
+package main
+
+import (
+	"errors"
+	. "github.com/onsi/gomega"
+	"testing"
+)
+
+func mightReturnError(condition bool) (string, error) {
+	if condition {
+		return "", errors.New("an error occurred")
+	}
+	return "success", nil
+}
+
+func TestErrorCheck(t *testing.T) {
+	RegisterFailHandler(ginkgo.Fail)
+
+	result, err := mightReturnError(false)
+	Expect(err).Should(Succeed())
+	Expect(result).To(Equal("success"))
+}
+
+```
+In this example, Should(Succeed()) is used to assert that err is nil, indicating that the function call was successful.
