@@ -9,7 +9,15 @@ The `os` package contains platform-independent functions for interacting with op
 
 [official docs](https://pkg.go.dev/os)
 
-```go copy
+## Reading Environment Variables
+
+While there are many libraries available for reading environment variables or combining configuration values with environment variables, including managing overrides, there may be cases where you prefer not to download an extra module or include non-built-in modules at all.
+
+In such scenarios, you can utilize the built-in `os` package in Go.
+
+Here's an example of how to use the `os` package to read and set environment variables:
+
+```go copy {15,19}
 package main
 
 import (
@@ -19,35 +27,47 @@ import (
 )
 
 func main() {
-	// Read an environment variable by key
+	// Reading an environment variable by key
 	path := os.Getenv("PATH")
-	fmt.Println(path)
+	fmt.Println("PATH:", path)
 
-	// Set environment variables by key
+	// Setting environment variables by key
 	os.Setenv("DB_USERNAME", "my_db_username")
 	os.Setenv("DB_PASSWORD", "my_secret_db_password")
 
-	// Retrieve and print environment variables
+	// Retrieving and printing environment variables
 	dbUsername := os.Getenv("DB_USERNAME")
-	fmt.Println(dbUsername)
+	fmt.Println("DB_USERNAME:", dbUsername)
 
 	dbPassword := os.Getenv("DB_PASSWORD")
-	fmt.Println(dbPassword)
+	fmt.Println("DB_PASSWORD:", dbPassword)
 
-	// Get the executable path
+	// Getting the executable path
 	executablePath, err := os.Executable()
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Print the executable path
-	fmt.Println(executablePath)
+	// Printing the executable path
+	fmt.Println("Executable Path:", executablePath)
 }
 ```
 
+In this example:
+
+- `os.Getenv("PATH")` is used to read the `PATH` environment variable.
+- `os.Setenv("DB_USERNAME", "my_db_username")` and `os.Setenv("DB_PASSWORD", "my_secret_db_password")` are used to set the `DB_USERNAME` and `DB_PASSWORD` environment variables, respectively.
+- `os.Executable()` is used to get the path of the current executable. This can be useful for determining the directory of your application when it's running.
+
+Using the `os` package provides a straightforward way to work with environment variables without the need for external dependencies.
+
 You can try out this code snippet [here](https://goplay.followthepattern.net/snippet/XjjnslCALLK).
 
-```go copy
+## Creating and Reading files
+
+This Go code snippet demonstrates basic file operations, including creating a file, writing to it, reading from it, and printing its contents.
+
+```go copy {10,21,26}
 package main
 
 import (
@@ -84,4 +104,32 @@ func main() {
 }
 ```
 
+In this program, a file named dump.txt is created, and the string "Follow The Pattern" is written to it.
+The file is then reopened, and its contents are read and printed to the console, showcasing the fundamental file I/O operations in Go.
+
 You can run the code in your browser [here](https://goplay.followthepattern.net/snippet/WjPLqDMq9Bb).
+
+## Checking if a File Exists
+
+This approach is arguably the most readable way to check if a file exists in Go. While there are other methods to verify the existence of a file, this one stands out for its clarity.
+
+```go copy {11}
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func main() {
+	filename := "file.txt"
+
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		fmt.Printf("File %s does not exist.\n", filename)
+	} else {
+		fmt.Printf("File %s exists.\n", filename)
+	}
+}
+```
+
+In this example, `os.Stat` is used to retrieve the file's status. If the file does not exist, `os.Stat` returns an error that satisfies `os.IsNotExist`, indicating the absence of the file.
