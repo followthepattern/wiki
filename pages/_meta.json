@@ -59,5 +59,8 @@
     "type": "page",
     "href": "https://followthepattern.net/contact",
     "newWindow": true
+  },
+  "post": {
+    "display": "hidden"
   }
 }

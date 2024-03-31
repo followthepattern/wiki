@@ -1,0 +1,31 @@
+export function Bold({children}) {
+    return (
+        <span className="font-bold text-blue-500">
+            {children}
+        </span>
+    )
+}
+
+<div style={{fontFamily:"Ubuntu"}}>
+
+<h1 class="max-w-sm mx-auto mt-4 text-3xl font-medium text-center text-slate-900">Title with <Bold>Text</Bold></h1>
+
+```go {13}
+
+code
+
+```
+
+import FPIcon from './../components/logo/FPIcon'
+import Discord from './../components/logo/Discord'
+import Github from './../components/logo/Github'
+import Youtube from './../components/logo/Youtube'
+
+<div className="flex justify-center items-center space-x-10 pt-3">
+    <FPIcon className="w-8 h-8 text-blue-600" />
+    <Github className="w-8 h-8 text-black" />
+    <Youtube className="w-10 h-10 fill-[#f00]" />
+    <Discord className="w-10 h-10 fill-[#5865F2]" />
+</div>
+
+</div>
