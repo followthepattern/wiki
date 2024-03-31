@@ -39,9 +39,6 @@ func main() {
 	dbUsername := os.Getenv("DB_USERNAME")
 	fmt.Println("DB_USERNAME:", dbUsername)
 
-	dbPassword := os.Getenv("DB_PASSWORD")
-	fmt.Println("DB_PASSWORD:", dbPassword)
-
 	// Getting the executable path
 	executablePath, err := os.Executable()
 	if err != nil {
