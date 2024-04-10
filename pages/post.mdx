@@ -6,6 +6,14 @@ export function Bold({children}) {
     )
 }
 
+export function Alert({children}) {
+    return (
+        <span className="font-bold text-rose-500">
+            {children}
+        </span>
+    )
+}
+
 <div style={{fontFamily:"Ubuntu"}}>
 
 <h1 className="max-w-sm mx-auto mt-4 text-3xl font-medium text-center dark:nx-text-white text-slate-900">Title with <Bold>Text</Bold></h1>
