@@ -1,0 +1,168 @@
+---
+title: Map
+description: In the Go programming language, a map is an implementation of a hash table.
+---
+
+# Map
+
+In the Go programming language, a `map` is an implementation of a hash table.
+
+General syntax:
+```go copy
+map[KeyType]ValueType
+```
+
+Where `KeyType` is a comparable type, as later it will be used to retrieve an element from the data structure based on its value. Meanwhile, `ValueType` can be any type, including another `map`.
+
+Its default value is `nil` or a `nil map`, as it's not possible to assign any other type's `nil` value.
+
+There are several ways to initialize a map:
+
+```go copy
+var m map[string]int = map[string]int{}
+```
+
+```go copy
+m := map[string]int{}
+```
+
+```go copy
+m := make(map[string]int)
+```
+
+Assigning a value after initialization is straightforward:
+
+```go copy
+m["follow"] = 2022
+```
+
+Value assignment during initialization:
+
+```go copy
+m := map[string]int {
+	"follow": 1,
+	"the": 2,
+	"pattern": 3,
+}
+```
+
+Reading from a map can also be done in several ways:
+
+```go copy
+value := m["follow"]
+```
+
+If there is no value associated with the key, the `map` returns the default value of the value type. In such cases, it is better to use the following approach:
+
+```go copy
+value, ok := m["follow"]
+```
+
+The boolean variable `ok` indicates whether the `map` contains the requested key, while `value` contains the stored value.
+
+The built-in `delete` function can be used with a `map` to easily remove an element:
+
+```go copy
+delete(m, "follow")
+```
+
+The `len` function can be used to determine how many key-value pairs have been registered:
+
+```go copy
+len(m)
+```
+
+## Clone a map using built-in `maps` library
+
+Following example demonstrates the usage of the `maps` package to clone a map, which is a higher-level approach compared to manually copying each key-value pair.
+
+The `maps.Clone` function calls later `clone` function from the runtime package.
+
+```go copy {13}
+package main
+
+import (
+	"fmt"
+	"maps"
+)
+
+func main() {
+	map1 := map[string]int{
+		"key": 1,
+	}
+
+	map2 := maps.Clone(map1)
+	map2["key"] = 100
+
+	fmt.Println("map1", map1["key"])
+	fmt.Println("map2", map2["key"])
+}
+```
+
+Play with the code [here](https://goplay.followthepattern.net/snippet/KcWKYixjEaG)
+
+## Delete elements from a `map` using `maps.DeleteFunc`
+
+Following example illustrates how to use the maps package to perform a conditional deletion of key-value pairs from a map.
+You can specify a specific criterion based on the key or the value.
+
+```go copy {17}
+package main
+
+import (
+	"fmt"
+	"maps"
+	"strings"
+)
+
+func main() {
+	m := map[string]int{
+		"prefix_value1": 1,
+		"value2":        2,
+		"value3":        3,
+		"prefix_value4": 4,
+	}
+
+	maps.DeleteFunc(m, func(k string, v int) bool {
+		return strings.HasPrefix(k, "prefix")
+	})
+	fmt.Println(m)
+}
+```
+In this example, you can see `DeleteFunc` deletes only specific prefixed key-value pairs from the map.
+
+Check out the code [here](https://goplay.followthepattern.net/snippet/qqIZ40uI2Dl)
+
+## Comparing maps with custom equality function
+
+The code snippet below demonstrates the use of maps package to compare two maps of different types (int and string) based on a custom equality function. 
+
+```go copy {19}
+package main
+
+import (
+	"fmt"
+	"maps"
+)
+
+func main() {
+	m1 := map[string]int{
+		"one":   1,
+		"two":   2,
+		"three": 3,
+	}
+	m2 := map[string]string{
+		"one":   "1",
+		"two":   "2",
+		"three": "3",
+	}
+	eq := maps.EqualFunc(m1, m2, func(v1 int, v2 string) bool {
+		return fmt.Sprintf("%d", v1) == v2
+	})
+	fmt.Println(eq)
+}
+```
+
+`maps.EqualFunc` is part of the maps package and is designed to determine if two maps are equal based on a custom function provided by the user.
+
+Try out the code [here](https://goplay.followthepattern.net/snippet/qjhxWu__jpR)

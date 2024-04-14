@@ -1,0 +1,93 @@
+---
+title: Slice
+description: A slice in Go is a dynamic array that can store elements of the same type.
+---
+
+# Slice
+A slice in Go is a dynamic array that can store elements of the same type. It can be indexed and its length queried, much like a fixed-size array. Unlike arrays, slices can grow or shrink as needed. When the capacity is exceeded, a new underlying array is allocated, and the data is transferred.
+
+General syntax
+```go copy
+list := []Type{}
+```
+Its default value is `nil` or a `nil slice`.
+
+Here's how you can create a `slice` type:
+```go copy
+package main
+
+import (
+	"fmt"
+	"reflect"
+)
+
+func main() {
+	// similar to defining an array, except without a predefined length
+	slice1 := []int{1, 2}
+	fmt.Println(reflect.TypeOf(slice1).Kind().String()) // slice
+
+	array := [6]int{2, 3, 5, 7, 11, 13} // array
+
+	// creating from array
+	var slice2 []int = array[1:4]
+
+	// creating by using make with a length of 5
+	slice3 := make([]int, 5)
+
+	slice3[4] = 1
+
+	// using make and defining capacity allocates an underlying array
+	// of size 10 and returns a slice of length 0 and capacity 10
+	slice4 := make([]int, 0, 10)
+
+	// slice4[0] = 1 // would panic, the slice has a 0 length
+
+	fmt.Println("slice1", slice1)
+	fmt.Println("slice2", slice2)
+	fmt.Println("slice3", slice3)
+	fmt.Println("slice4", slice4)
+}
+```
+You can run the above code [here](https://goplay.followthepattern.net/snippet/VWLo-LqMXcS).
+
+Its default value is `nil` or a `nil slice`, as it's not possible to assign the `nil` value of another type.
+
+```go copy
+length := len(array)
+```
+The default length will be zero.
+
+Individual elements can be accessed using indexing, similar to an `array`.
+
+```go copy
+item := slice[1]
+```
+
+## Adding an Item to a `nil` Slice in Go
+
+In Go, a `nil` slice is a slice that has been declared but not initialized with any values. Despite being `nil`, you can still use the built-in `append` function to add items to it. When you append an item to a `nil` slice, Go automatically allocates memory for the slice and adds the item to it. As a result, the slice will no longer be `nil` and will have a length of 1.
+
+Here's an example to demonstrate this behavior:
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	var list []int = nil // Declare a nil slice of int
+
+	list = append(list, 1) // Append an item to the nil slice
+
+	fmt.Println(list) // Output: [1]
+}
+```
+
+In this example, `list` is initially a `nil` slice.
+After appending the integer `1` to it, the slice becomes `[1]` with a length of 1.
+This demonstrates that the `append` function can handle `nil` slices gracefully, making it easy to work with slices that may not be initialized at the time of declaration.
+
+
+Play with the example [here](https://goplay.followthepattern.net/snippet/_DcacmEyUs8)

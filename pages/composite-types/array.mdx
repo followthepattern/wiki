@@ -1,0 +1,52 @@
+---
+title: Array
+description: An array in Go is a fixed-size sequence of elements, all of the same type. When declaring an array, you must specify its size.
+---
+
+# Array
+An array in Go is a fixed-size sequence of elements, all of the same type. When declaring an array, you must specify its size.
+
+General syntax
+```go copy
+list := [int]Type{}
+```
+Its default value is `nil` or a `nil slice`, as it's not possible to assign the `nil` value of another type.
+
+When defining an array, you must always specify the length of the data sequence.
+```go copy
+array := [3]int{}
+```
+
+The `array` has a length value, which can be accessed as follows; if the default value is set, the length will be 0.
+
+```go copy
+length := len(array)
+```
+Additionally, individual elements can be accessed using indexing.
+
+```go copy
+item := array[1]
+```
+
+```go copy
+package main
+
+import "fmt"
+
+func main() {
+	// define an array with default value(s)
+	array := [3]int{0}
+
+	// you can give or override values using indexes
+	array[1] = 1
+
+	array[2] = 2
+
+	length := len(array)
+
+	fmt.Printf("length: %d, array: %v", length, array)
+}
+```
+You can run the above code [here](https://goplay.followthepattern.net/snippet/FfBdl1XUdTE).
+
+If the length of the data sequence isn't defined, it won't create an `array` type, but rather a `slice`.

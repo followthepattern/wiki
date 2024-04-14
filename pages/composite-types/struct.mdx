@@ -1,0 +1,214 @@
+---
+title: Struct
+description: A struct is a collection of fields of different types that logically belong together, that creates a new type
+---
+
+# Struct
+
+A `struct` is a collection of fields of different types that logically belong together, that creates a new type. It's not a reference type, which means, when a `struct` passed to a function it will be copied. `struct`'s fields will hold their default values until it gets defined.
+
+General syntax:
+```go copy
+type [NAME] struct {
+	[FIELD NAME] [FIELD TYPE] [TAGS...]
+}
+```
+Here's an example of creating a `struct`:
+```go copy
+type Vertex struct {
+	X int `json:"x"`
+  Y int `json:"y"`
+	Z int `json:"z"`
+}
+```
+The above syntax can be further simplified if tags are not defined:
+```go copy
+type Vertex struct {
+	X, Y, Z int
+}
+```
+Fields' values can be modified later:
+```go copy
+v := Vertex{
+	X: 1,
+	Y: 2,
+	Z: 3,
+}
+
+v.X = 3
+fmt.Println(v)
+```
+Pointers to the `struct` can also be created using the `&` operator:
+```go copy
+v := Vertex{
+	X: 1,
+	Y: 2,
+	Z: 3,
+}
+
+p := &v
+
+fmt.Println(p)
+```
+A new variable from a `struct` can be created in various ways:
+```go copy
+fmt.Println(Vertex{1, 2, 3})
+fmt.Println(Vertex{X: 1})
+fmt.Println(Vertex{Y: 2, Z: 3})
+
+// pointer
+fmt.Println(&Vertex{1, 2, 3})
+```
+For accessing different fields or modifying them, you can use the `.` character. This also works with pointers, but you need to check that the pointer is not `nil` before reading it.
+
+```go copy
+v := Vertex{
+	X: 1,
+	Y: 2,
+	Z: 3,
+}
+
+fmt.Println(v.X)
+
+p := &v
+fmt.Println(p.X)
+```
+
+## Struct Embedding
+struct embedding is a mechanism that allows you to compose or embed one struct type within another. It allows you to achieve code reuse and create more complex data structures by building on existing ones.
+
+The fields and methods of the embedded struct become part of the embedding struct. This enables you to access the embedded struct's fields and methods as if they were directly defined in the embedding struct.
+
+```go copy
+type Base struct {
+	ID   int
+	Name string
+}
+
+func (b *Base) GetName() string {
+	return b.Name
+}
+
+type Log struct {
+	CreationID int
+	UpdateID   int
+}
+
+func (l *Log) GetCreationID() int {
+	return l.CreationID
+}
+
+func (l *Log) GetUpdateID() int {
+	return l.UpdateID
+}
+
+type User struct {
+	Base
+	Log
+}
+```
+It's important to note that, with type embedding, the methods of the embedded type become methods of the outer type, but when invoked, the receiver will be the inner type, not the outer type. So the `User` type will directly have the `GetName` function because it embeds the `Base` type. When the `GetName` method is called, the receiver will be the `Base` type, not the `User` type. Unless the `User` type overrides.
+
+It's possible to shadow methods of the inner type to access them using the receiver of the outer type.
+
+```go copy
+func (u *User) GetName() string {
+    return u.Base.Name
+}
+```
+When creating an instance of the outer type, you can set the values of the inner types:
+```go copy
+func NewUser(name string, creationID int) User {
+	return User{
+		Base{Name: name},
+		Log{CreationID: creationID},
+	}
+}
+```
+But this is not mandatory; Otherwise the fields will take their default values.
+```go copy
+func NewUser(name string, creationID int) User {
+	return User{}
+}
+```
+
+Embedded types introduce naming conflicts, but these can be resolved easily. The fields or methods of the outer type always shadow those of the inner type. Additionally, the name of the embedded can't be the same to the field name of the enclosing type at the same level.
+
+```go copy
+type User struct {
+	Log
+	Log Logger
+}
+```
+
+Without the ability to embed types, you would need to write enclosing functions around the fields, just like in the below example, which would increase the lines of code without substantially improving functionality.
+
+```go copy
+type User struct {
+	base Base
+	log  Log
+}
+
+func (u *User) GetName() string {
+	return u.base.Name
+}
+```
+
+## Anonymous Struct
+
+In Go, an *anonymous* `struct` is a `struct` type that can be defined without a name, without even using the `type` keyword. It can be created directly in a variable declaration or function call.
+
+In the following code snippet, a variable named `point` receives an anonymous `struct` object with two integer fields, `x` and `y`. Afterward, the value of the `x` field is modified just as it would be with a regular named `struct`.
+
+```go copy
+package main
+
+import "fmt"
+
+func main() {
+	point := struct {
+		x, y int
+	}{
+		x: 10,
+		y: 20,
+	}
+
+	fmt.Println(point)
+
+	point.x = 30
+
+	fmt.Println(point)
+}
+```
+
+You can run the above code [here](https://goplay.followthepattern.net/snippet/uyt3bTDxP-1).
+
+In the next example, a traditional named `struct` and an anonymous `struct` are compared. Both have identical field names and values. The comparison evaluates to true.
+
+```go copy
+package main
+
+import "fmt"
+
+type Point struct {
+	x, y int
+}
+
+func main() {
+	point := struct {
+		x, y int
+	}{
+		x: 10,
+		y: 20,
+	}
+
+	p2 := Point{
+		x: 10,
+		y: 20,
+	}
+
+	fmt.Println(point == p2) // true
+}
+```
+
+You can run the above code snippet [here](https://goplay.followthepattern.net/snippet/xhDmQbPFVV1).
