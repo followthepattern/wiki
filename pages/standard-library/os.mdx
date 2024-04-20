@@ -60,40 +60,83 @@ Using the `os` package provides a straightforward way to work with environment v
 
 You can try out this code snippet [here](https://goplay.followthepattern.net/snippet/XjjnslCALLK).
 
-## Creating and Reading files
+## File Operations in Go
 
-This Go code snippet demonstrates basic file operations, including creating a file, writing to it, reading from it, and printing its contents.
+Creating, reading, and writing files are common tasks in application development, especially for CLI (Command Line Interface) programs.
 
-```go copy {10,21,26}
+Golang provides various levels of abstraction to manage file operations. In this section, we focus on methods that are both user-friendly and efficient.
+
+### Creating a File
+
+Creating a file in Go is straightforward. The `os` package includes a function named `Create`, which is used to create a file. The file path can be either absolute or relative. The function returns a tuple: an `os.File` object, which contains metadata about the created file, and an `error`, which captures any failures that may occur.
+
+Below is a typical example of using the `os.Create` function:
+
+```go
 package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 )
 
 func main() {
-	file, err := os.Create("./dump.txt") // Create a new file
+	_, err := os.Create("./dump.txt") // Create a new file
 	if err != nil {
-		log.Fatal(err) // Exit the application while printing the error
+		fmt.Println(err.Error())
+		os.Exit(1) // Exit the application while printing the error
 	}
+}
+```
 
-	fmt.Fprintln(file, "Follow The Pattern") // Write to the file
-	err = file.Close()
+Run the code [here](https://goplay.followthepattern.net/snippet/PVrTq5Gshin).
+
+### Reading from a File
+
+The simplest way to read the contents of a file into a variable is by using the `os.ReadFile` function. This function reads the entire file content into a string variable and also returns an `error` to capture the reason for any failures.
+
+```go
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func main() {
+	entireFile, err := os.ReadFile("file.txt") // Assuming 'file.txt' is the intended file path
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
+	fmt.Println(entireFile)
+}
+```
 
-	file, err = os.Open("./dump.txt") // Open the created file
+### Reading File Content into a Binary Array
+
+The following example demonstrates a lower-level implementation of file reading. The `Read` function fills a byte array with data from the file, allowing you to specify the length of the array.
+
+```go
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func main() {
+	file, err := os.Open("./dump.txt") // Open file
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
+		os.Exit(1) // Exit if file can't be opened
 	}
 
 	data := make([]byte, 50)
 	count, err := file.Read(data) // Read from the file
 	if err != nil {
-		log.Fatal(err)
+		fmt.Println(err.Error())
+		os.Exit(1) // Exit if reading fails
 	}
 
 	text := data[:count]
@@ -101,10 +144,7 @@ func main() {
 }
 ```
 
-In this program, a file named dump.txt is created, and the string "Follow The Pattern" is written to it.
-The file is then reopened, and its contents are read and printed to the console, showcasing the fundamental file I/O operations in Go.
-
-You can run the code in your browser [here](https://goplay.followthepattern.net/snippet/WjPLqDMq9Bb).
+In this example, the application opens a file named `dump.txt` and reads its content into a byte slice named `data`. Note that the length and capacity of the slice are limited to 50, meaning it will read only the first 50 characters into the `data` byte array.
 
 ## Checking if a File Exists
 
