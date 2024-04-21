@@ -12,8 +12,10 @@ list := []Type{}
 ```
 Its default value is `nil` or a `nil slice`.
 
-Here's how you can create a `slice` type:
-```go copy
+If you don't define size to an array, Golang will handle it as a slice.
+
+Here are some example how you can create a `slice` type:
+```go copy {10, 15}
 package main
 
 import (
@@ -26,21 +28,16 @@ func main() {
 	slice1 := []int{1, 2}
 	fmt.Println(reflect.TypeOf(slice1).Kind().String()) // slice
 
-	array := [6]int{2, 3, 5, 7, 11, 13} // array
-
+	array := [6]int{2, 3, 5, 7, 11, 13} // that creates a fixed size array
 	// creating from array
 	var slice2 []int = array[1:4]
 
 	// creating by using make with a length of 5
 	slice3 := make([]int, 5)
 
-	slice3[4] = 1
-
 	// using make and defining capacity allocates an underlying array
 	// of size 10 and returns a slice of length 0 and capacity 10
 	slice4 := make([]int, 0, 10)
-
-	// slice4[0] = 1 // would panic, the slice has a 0 length
 
 	fmt.Println("slice1", slice1)
 	fmt.Println("slice2", slice2)
@@ -91,3 +88,126 @@ This demonstrates that the `append` function can handle `nil` slices gracefully,
 
 
 Play with the example [here](https://goplay.followthepattern.net/snippet/_DcacmEyUs8)
+
+## `slices` package
+
+Go Team offers a Go package called `slices`, which is remarkably useful for slice operations.
+You can find the official doc [here](https://pkg.go.dev/golang.org/x/exp/slices), I will review couple of the functions and discuss them.
+
+
+### `Delete` function
+
+The Delete function zeroes out the elements of a given slice within a specified interval and adjusts the slice's length accordingly.
+In the example below, I demonstrate that the capacity of the slice remains unchanged.
+
+```go {14} copy
+package main
+
+import (
+	"fmt"
+
+	"golang.org/x/exp/slices"
+)
+
+func main() {
+	slice := []int{1, 2, 3, 4, 5, 6, 7}
+	fmt.Printf("before delete len=%d cap=%d\n", len(slice), cap(slice))
+	fmt.Println(slice)
+
+	slice = slices.Delete(slice, 0, 5)
+
+	fmt.Printf("after delete len=%d cap=%d\n", len(slice), cap(slice))
+	fmt.Println(slice)
+}
+```
+Run the code [here](https://goplay.followthepattern.net/snippet/6jgC0fkFA0S)
+
+### `DeleteFunc` function
+
+The `DeleteFunc` function zeroes the elements of the given slice, if the condition passed on the certain element. It doesn't change the capacity, only zeroes out the values.
+
+```go copy {14}
+package main
+
+import (
+	"fmt"
+
+	"golang.org/x/exp/slices"
+)
+
+func main() {
+	slice := []int{1, 2, 3, 4, 5, 6, 7}
+	fmt.Printf("before delete len=%d cap=%d\n", len(slice), cap(slice))
+	fmt.Println(slice)
+
+	slice = slices.DeleteFunc(slice, func(i int) bool {
+		return i > 3
+	})
+
+	fmt.Printf("after delete len=%d cap=%d\n", len(slice), cap(slice))
+	fmt.Println(slice)
+}
+```
+
+Play with the code [here](https://goplay.followthepattern.net/snippet/iBc9m4H4CQ7)
+
+### `Clip` function
+
+The Clip function trims any unused capacity from the given slice, reducing its size to match its current length.
+In contrast, the Delete and DeleteFunc functions do not modify the underlying array; they only zero out the values.
+These functions can be useful for managing the size of the underlying array without altering its capacity.
+
+```go copy {21}
+package main
+
+import (
+	"fmt"
+
+	"golang.org/x/exp/slices"
+)
+
+func main() {
+	slice := []int{1, 2, 3, 4, 5, 6, 7}
+	fmt.Printf("before delete len=%d cap=%d\n", len(slice), cap(slice))
+	fmt.Println(slice)
+
+	slice = slices.DeleteFunc(slice, func(i int) bool {
+		return i > 3
+	})
+
+	fmt.Printf("after delete len=%d cap=%d\n", len(slice), cap(slice))
+	fmt.Println(slice)
+
+	slice = slices.Clip(slice)
+	fmt.Printf("after clip len=%d cap=%d\n", len(slice), cap(slice))
+	fmt.Println(slice)
+}
+```
+
+Play with the code [here](https://goplay.followthepattern.net/snippet/j3pjDKqVxCT)
+
+### `Grow` function
+
+The `Grow` function increases the capacity of a slice by at least the specified value. The underlying array of the slice will typically expand when all its fields are populated and a new element needs to be appended. Growing the underlying array involves linear complexity, as it requires assigning each value to the new array. This function allows us to control when this performance impact occurs
+
+```go copy {14}
+package main
+
+import (
+	"fmt"
+
+	"golang.org/x/exp/slices"
+)
+
+func main() {
+	slice := []int{1, 2, 3, 4, 5, 6, 7}
+	fmt.Printf("before grow len=%d cap=%d\n", len(slice), cap(slice))
+	fmt.Println(slice)
+
+	slice = slices.Grow(slice, 10)
+	fmt.Printf("after grow len=%d cap=%d\n", len(slice), cap(slice))
+	fmt.Println(slice)
+}
+```
+
+Test the code [here](https://goplay.followthepattern.net/snippet/WJ0jLyZVjjz)
