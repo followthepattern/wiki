@@ -15,7 +15,6 @@ function Head() {
 
   return (
     <>
-      <Script src="https://followthepattern.s3.us-east-2.amazonaws.com/fp/fp-analytics.js"/>
       <meta property="og:url" content={url} />
       <meta property="og:title" content={title || 'Follow The Pattern'} />
       <meta
