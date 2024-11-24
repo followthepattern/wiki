@@ -1,3 +1,45 @@
 # Module
 
 A module is a collection of multiple Go packages that are built together. Typically, a Go repository contains a single module, located at the root of the repository. The module that contains the packages also has a `go.mod` file, which defines the module path. The module path acts as a prefix when referencing packages. Additionally, the `go.mod` file specifies the module's dependencies on other modules, their minimum version numbers, and the minimum Go version required to build the module.
+
+## `go.sum` file
+
+The `go.sum` file is an integral part of dependency management in Go. It works alongside the `go.mod` file to ensure the integrity and reproducibility of your project’s dependencies.
+
+### Purpose of `go.sum`
+1. **Dependency Verification**  
+   The `go.sum` file contains checksums (cryptographic hashes) of the exact versions of all dependencies used in your project. These checksums verify that the downloaded dependencies are not tampered with and match the expected content.
+
+2. **Reproducibility**  
+   By recording the precise version and hash of each dependency, the `go.sum` file ensures that anyone building the project gets the exact same dependency versions, maintaining consistency across environments.
+
+---
+
+### When is `go.sum` Updated?
+The `go.sum` file is automatically updated whenever:
+- A new dependency is added to your project.
+- An existing dependency is updated.
+- You run `go mod tidy` to clean up or validate dependencies.
+
+---
+
+####Example
+Here’s a snippet of a `go.sum` file:
+```
+github.com/google/uuid v1.3.0 h1:J+n7Yp8c1J5EMuTr+GRNlpmw5I5sJq4pOHR3QoJz+CM=
+github.com/google/uuid v1.3.0/go.mod h1:Y+K2cAFlPvQKjz5FNvOzhWnmlqlvTbFc4dRZVuj4nkg=
+```
+
+- The first line stores the checksum for the dependency's content.
+- The second line stores the checksum for the module's `go.mod` file.
+
+---
+
+### Best Practices
+- **Commit the `go.sum` File**  
+  Always commit the `go.sum` file to version control. It ensures all developers and CI/CD systems working on your project use the same verified dependencies.
+  
+- **Don’t Edit Manually**  
+  Avoid manual edits to the `go.sum` file. Let Go tools manage it for you.
+
+---
