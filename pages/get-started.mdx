@@ -18,7 +18,7 @@ Different operating systems require different installation steps. The descriptio
 
 By running the following command, you will delete the contents of the `/usr/local/go` directory if it exists. The content of the package downloaded from the link above should also be copied to the `/usr/local/go` location. If the package was downloaded to the `/user/local` location, the following command will execute the necessary steps:
 ```bash
-rm -rf /usr/local/go && tar -C /usr/local -xzf go1.18.1.linux-amd64.tar.gz
+rm -rf /usr/local/go && tar -C /usr/local -xzf go1.23.3.linux-amd64.tar.gz
 ```
 (You might need to run the command as `root`).
 
@@ -39,7 +39,7 @@ go version
 
 ### Mac
 
-`You need to open the downloaded file and follow its instructions for installation.
+You need to open the downloaded file and follow its instructions for installation.
 
 The installer will create the Go package in the `/usr/local/go` location. The installer should add the `/usr/local/go/bin` value to the `PATH` environment variable. You might need to restart the Terminal for the changes to take effect.
 
@@ -79,7 +79,7 @@ After running these commands, the project folder and the `go.mod` file will be c
 ```
 module followthepattern/example
 
-go 1.21
+go 1.23.3
 ```
 
 Next, you can create a Go source file, which will contain the actual application code. Name the file `main.go` and place it in the root of the project folder. The first statement of every `.go` source file must be the package definition. Every executable command must be located in the `main` package.
@@ -125,7 +125,7 @@ After building, the content of the `go.mod` file will change as follows:
 ```
 module followthepattern/example
 
-go 1.21
+go 1.23.3
 
 require github.com/google/uuid v1.3.0
 ```
