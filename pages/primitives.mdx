@@ -55,4 +55,35 @@ Constants are expressions assigned with specific values. These are evaluated at 
 Example [here](https://goplay.followthepattern.net/snippet/8B2V4MYQ3uN).
 
 ## Special Type
-`uintptr` is a special type capable of storing any pointer type; however, it's not treated by the garbage collection as a regular pointer. Generally, it's not used in Go, mostly the Golang language developers use it.
+`uintptr` is an **unsigned integer type** in Go that is used to store the memory address of an object. It is primarily used for **low-level memory operations** and is often associated with working with the Go runtime, operating system calls, or interacting with unsafe pointers.
+
+
+### Example: Using `uintptr` with the `unsafe` Package
+
+```go copy {13,18}
+package main
+
+import (
+	"fmt"
+	"unsafe"
+)
+
+func main() {
+	// Example array
+	array := [3]int{10, 20, 30}
+
+	// Get a pointer to the first element
+	ptr := unsafe.Pointer(&array[0])
+
+	// Convert to uintptr and manipulate the memory address
+	for i := 0; i < len(array); i++ {
+		// Use uintptr to calculate the address of the next element
+		elementPtr := (*int)(unsafe.Pointer(uintptr(ptr) + uintptr(i)*unsafe.Sizeof(array[0])))
+
+		// Print the value at the calculated address
+		fmt.Println(*elementPtr)
+	}
+}
+```
+
+Try out the code from the browser [here](https://goplay.followthepattern.net/snippet/kd-MxruryYI)
