@@ -48,11 +48,63 @@ Since a `string` is a sequence of consecutive characters, you have the ability t
 
 Further examples [here](https://goplay.followthepattern.net/snippet/LpcjgRe02Vc).
 
+Using special characters in Golang
+```go
+package main
+
+import (
+	"fmt"
+	"unsafe"
+)
+
+func main() {
+	str := "A😊" // UTF-8 encoding: "A" is 1 byte, "😊" is 4 bytes.
+
+	// Length of the string in bytes
+	fmt.Println("String length (in bytes):", len(str)) // Output: 5 (1 byte for "A" + 4 bytes for "😊")
+
+	// Size of a byte
+	var b byte = 'A'
+	fmt.Println("Size of byte:", unsafe.Sizeof(b)) // Output: 1
+
+	// Size of a rune
+	var r rune = '😊'
+	fmt.Println("Size of rune:", unsafe.Sizeof(r)) // Output: 4
+
+	// Convert string to runes
+	runes := []rune(str)
+	fmt.Println("Rune array length:", len(runes)) // Output: 2 (1 rune for "A", 1 rune for "😊")
+
+	// Total memory for rune array
+	fmt.Println("Memory for rune array:", len(runes)*int(unsafe.Sizeof(runes[0]))) // Output: 8
+}
+```
+Try out the code in your [browser](https://goplay.followthepattern.net/snippet/eQu9iNHfVYA)
+
 ## Constants
 
 Constants are expressions assigned with specific values. These are evaluated at compile time, not at runtime. To declare a constant, one assigns a value to a name using the const keyword. The fixed nature of their values ensures they cannot be accidentally reassigned during runtime.
 
 Example [here](https://goplay.followthepattern.net/snippet/8B2V4MYQ3uN).
+
+## Literals
+In Go, literals are the constant values assigned directly in the code. They are used to represent fixed values of various data types such as numbers, strings, booleans, or complex types. Literals are essential for defining values during initialization and for simple calculations.
+
+```go copy
+package main
+
+import "fmt"
+
+func main() {
+    var dec = 42       // Decimal
+    var oct = 075      // Octal
+    var hex = 0x1A3F   // Hexadecimal
+    var bin = 0b1010   // Binary
+
+    fmt.Println(dec, oct, hex, bin)
+}
+```
+Try out the code in your browser [here](https://goplay.followthepattern.net/snippet/b6QSwm1uft9).
 
 ## Special Type
 `uintptr` is an **unsigned integer type** in Go that is used to store the memory address of an object. It is primarily used for **low-level memory operations** and is often associated with working with the Go runtime, operating system calls, or interacting with unsafe pointers.
@@ -86,4 +138,4 @@ func main() {
 }
 ```
 
-Try out the code from the browser [here](https://goplay.followthepattern.net/snippet/kd-MxruryYI)
+Try out the code from the browser [here](https://goplay.followthepattern.net/snippet/kd-MxruryYI).
