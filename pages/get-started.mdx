@@ -135,3 +135,34 @@ An external module reference has been added to the file, explicitly defining the
 ```
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe
+```
+
+## How to Run a Go Application
+
+To run a Go application, follow these simple steps:
+
+1. **Navigate to the Project Directory**  
+   Ensure you are in the directory where your `main.go` file (or the entry point of your application) is located:
+   ```bash
+   cd /path/to/your/project
+   ```
+
+2. **Run the Application**  
+   Use the `go run` command to execute the application directly:
+   ```bash
+   go run main.go
+   ```
+   If your project has multiple files, you can run them all together:
+   ```bash
+   go run .
+   ```
+
+3. **Build and Execute the Binary**  
+   To create a compiled binary of your application:
+   ```bash
+   go build -o myapp
+   ```
+   This generates an executable file (`myapp` or `myapp.exe` on Windows). Run the executable:
+   ```bash
+   ./myapp
+   ```
