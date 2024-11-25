@@ -52,7 +52,7 @@ func main() {
     fmt.Println(add(1, 2))
 }
 ```
-Function with multiple return values:
+### Multiple return values
 
 ```go copy
 func GetUserByID(id int) (User, error) {
@@ -70,6 +70,37 @@ func getItem(name string) (value *string, ok bool) {
     return // not necessary to use values here
 }
 ```
+
+### Variadic functions
+
+Variadic functions are traditional functions, but can be called with any number of trailing arguments
+
+```go copy {17,18,20}
+package main
+
+import "fmt"
+
+func sum(nums ...int) {
+	fmt.Print(nums, " ")
+	total := 0
+
+	for _, num := range nums {
+		total += num
+	}
+	fmt.Println(total)
+}
+
+func main() {
+
+	sum(1, 2)
+	sum(1, 2, 3)
+
+	nums := []int{1, 2, 3, 4}
+	sum(nums...)
+}
+```
+
+Run this code in your browser without installation [here](https://goplay.followthepattern.net/snippet/ThUG95FKB5m).
 
 ## Closure and Anonymous Function
 A *closure* is an instance of a function, while an anonymous function is a function definition that does not require a name. In fact, to implement a regular *closure*, you need to use an anonymous function, so the two definitions are closely related. Such functions can only be created within other functions and can sometimes be passed around as variables.
