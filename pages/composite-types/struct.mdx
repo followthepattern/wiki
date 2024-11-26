@@ -269,3 +269,7 @@ func (u User) GetName() string {
 	return u.base.Name
 }
 ```
+
+## Difference between embedding and inheritance
+
+Main difference between embedding and inheritance is that the inner type can't reference the outer type in a method that got defined at the inner type.
