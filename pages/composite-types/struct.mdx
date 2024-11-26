@@ -74,6 +74,32 @@ p := &v
 fmt.Println(p.X)
 ```
 
+Play with the following example in your browser [here](https://goplay.followthepattern.net/snippet/0_HUpeTw_3A)
+```go copy
+package main
+
+import "fmt"
+
+type Vertex struct {
+	X int `json:"x"`
+	Y int `json:"y"`
+	Z int `json:"z"`
+}
+
+func main() {
+	fmt.Println(Vertex{1, 2, 3})
+	fmt.Println(Vertex{X: 1})
+	fmt.Println(Vertex{Y: 2, Z: 3})
+
+	v := &Vertex{1, 2, 3}
+
+	// pointer
+	fmt.Println(&Vertex{1, 2, 3})
+
+	fmt.Println("X", v.X)
+}
+```
+
 ## Anonymous Struct
 
 In Go, an *anonymous* `struct` is a `struct` type that can be defined without a name, without even using the `type` keyword. It can be created directly in a variable declaration or function call.
