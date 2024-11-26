@@ -74,6 +74,96 @@ p := &v
 fmt.Println(p.X)
 ```
 
+## Anonymous Struct
+
+In Go, an *anonymous* `struct` is a `struct` type that can be defined without a name, without even using the `type` keyword. It can be created directly in a variable declaration or function call.
+
+In the following code snippet, a variable named `point` receives an anonymous `struct` object with two integer fields, `x` and `y`. Afterward, the value of the `x` field is modified just as it would be with a regular named `struct`.
+
+```go copy
+package main
+
+import "fmt"
+
+func main() {
+	point := struct {
+		x, y int
+	}{
+		x: 10,
+		y: 20,
+	}
+
+	fmt.Println(point)
+
+	point.x = 30
+
+	fmt.Println(point)
+}
+```
+
+You can run the above code [here](https://goplay.followthepattern.net/snippet/uyt3bTDxP-1).
+
+In the next example, a traditional named `struct` and an anonymous `struct` are compared. Both have identical field names and values. The comparison evaluates to true.
+
+```go copy
+package main
+
+import "fmt"
+
+type Point struct {
+	x, y int
+}
+
+func main() {
+	point := struct {
+		x, y int
+	}{
+		x: 10,
+		y: 20,
+	}
+
+	p2 := Point{
+		x: 10,
+		y: 20,
+	}
+
+	fmt.Println(point == p2) // true
+}
+```
+
+You can run the above code snippet [here](https://goplay.followthepattern.net/snippet/xhDmQbPFVV1).
+
+## Empty struct
+
+An empty struct (struct{}) is a special type that takes up zero bytes of storage.
+It is often used when the only information needed is the existence of an item, rather than any additional data.
+This makes it a highly efficient way to represent concepts like presence, membership, or signaling.
+
+Example for checking for memberships
+
+```go copy
+set := make(map[string]struct{})
+set["apple"] = struct{}{}
+set["banana"] = struct{}{}
+
+// Check for membership
+if _, exists := set["apple"]; exists {
+    fmt.Println("Apple is in the set.")
+}
+```
+Example for channel signals
+```go copy
+done := make(chan struct{})
+
+// Goroutine
+go func() {
+    // Do some work
+    done <- struct{}{} // Signal completion
+}()
+
+<-done // Wait for signal
+```
+
 ## Struct Embedding
 struct embedding is a mechanism that allows you to compose or embed one struct type within another. It allows you to achieve code reuse and create more complex data structures by building on existing ones.
 
@@ -153,62 +243,3 @@ func (u *User) GetName() string {
 	return u.base.Name
 }
 ```
-
-## Anonymous Struct
-
-In Go, an *anonymous* `struct` is a `struct` type that can be defined without a name, without even using the `type` keyword. It can be created directly in a variable declaration or function call.
-
-In the following code snippet, a variable named `point` receives an anonymous `struct` object with two integer fields, `x` and `y`. Afterward, the value of the `x` field is modified just as it would be with a regular named `struct`.
-
-```go copy
-package main
-
-import "fmt"
-
-func main() {
-	point := struct {
-		x, y int
-	}{
-		x: 10,
-		y: 20,
-	}
-
-	fmt.Println(point)
-
-	point.x = 30
-
-	fmt.Println(point)
-}
-```
-
-You can run the above code [here](https://goplay.followthepattern.net/snippet/uyt3bTDxP-1).
-
-In the next example, a traditional named `struct` and an anonymous `struct` are compared. Both have identical field names and values. The comparison evaluates to true.
-
-```go copy
-package main
-
-import "fmt"
-
-type Point struct {
-	x, y int
-}
-
-func main() {
-	point := struct {
-		x, y int
-	}{
-		x: 10,
-		y: 20,
-	}
-
-	p2 := Point{
-		x: 10,
-		y: 20,
-	}
-
-	fmt.Println(point == p2) // true
-}
-```
-
-You can run the above code snippet [here](https://goplay.followthepattern.net/snippet/xhDmQbPFVV1).
