@@ -191,7 +191,7 @@ go func() {
 ```
 
 ## Struct Embedding
-struct embedding is a mechanism that allows you to compose or embed one struct type within another. It allows you to achieve code reuse and create more complex data structures by building on existing ones.
+`struct` embedding is a mechanism that allows you to compose or embed one struct type within another. It allows you to achieve code reuse and create more complex data structures by building on existing ones.
 
 The fields and methods of the embedded struct become part of the embedding struct. This enables you to access the embedded struct's fields and methods as if they were directly defined in the embedding struct.
 
@@ -201,7 +201,7 @@ type Base struct {
 	Name string
 }
 
-func (b *Base) GetName() string {
+func (b Base) GetName() string {
 	return b.Name
 }
 
@@ -210,11 +210,11 @@ type Log struct {
 	UpdateID   int
 }
 
-func (l *Log) GetCreationID() int {
+func (l Log) GetCreationID() int {
 	return l.CreationID
 }
 
-func (l *Log) GetUpdateID() int {
+func (l Log) GetUpdateID() int {
 	return l.UpdateID
 }
 
@@ -228,7 +228,7 @@ It's important to note that, with type embedding, the methods of the embedded ty
 It's possible to shadow methods of the inner type to access them using the receiver of the outer type.
 
 ```go copy
-func (u *User) GetName() string {
+func (u User) GetName() string {
     return u.Base.Name
 }
 ```
@@ -265,7 +265,7 @@ type User struct {
 	log  Log
 }
 
-func (u *User) GetName() string {
+func (u User) GetName() string {
 	return u.base.Name
 }
 ```

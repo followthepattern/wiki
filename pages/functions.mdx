@@ -222,30 +222,45 @@ func main() {
 ```
 You can access the values of the *receiver* using `.`. The *receiver* type can also be a pointer, allowing modification of the *receiver*'s fields. However, if the pointer is `nil`, it will result in an error.
 
-```go copy
+If the method doesn't reference the *receiver*, it won't panic as it won't try to read a `nil` pointer.
+
+```go copy {33,34}
+package main
+
+import (
+	"fmt"
+	"math"
+)
+
 type Vertex struct {
-    X float64 `json:"x"`
-    Y float64 `json:"y"`
-    Z float64 `json:"z"`
+	X float64 `json:"x"`
+	Y float64 `json:"y"`
+	Z float64 `json:"z"`
 }
 
 func (v Vertex) Abs() float64 {
-    return math.Sqrt(v.X*v.X + v.Y*v.Y + v.Z*v.Z)
+	return math.Sqrt(v.X*v.X + v.Y*v.Y + v.Z*v.Z)
 }
 
-func (v *Vertex) GetX() float64 {
-    return v.X
+func (v Vertex) GetX() float64 {
+	return v.X
+}
+
+func (v *Vertex) SetX(value float64) {
+	v.X = value
 }
 
 func (v *Vertex) Hello() {
-    fmt.Println("hello")
+	fmt.Println("hello")
 }
 
 func main() {
-    var v2 *Vertex
+	var v2 *Vertex
 
-    v2.Hello() // this method doesn't read from the receiver
-    v2.GetX()  // panic
+	v2.Hello()          // this method doesn't read from the receiver
+	v2.SetX(float64(1)) // panic
 }
 ```
 Since a method behaves just like a function, it can have multiple arguments and return values as well.
+
+Try out the code [here](https://goplay.followthepattern.net/snippet/D7mjd4BmEz4) in your browser, without installation.
