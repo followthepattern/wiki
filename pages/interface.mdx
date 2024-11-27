@@ -82,6 +82,57 @@ func main() {
 
 You can run the above example [here](https://goplay.followthepattern.net/snippet/JVWNyNsUFDN).
 
+## Anonymous Interface
+
+An anonymous interface is an **inline interface declaration** that specifies a set of methods that a type must implement.
+Unlike named interfaces, which are reusable and declared explicitly, anonymous interfaces are declared inline and are typically used for one-off situations.
+
+Here’s an example of a function accepting an anonymous interface:
+
+```go copy {5}
+package main
+
+import "fmt"
+
+func printValue(v interface {
+	String() string
+}) {
+	fmt.Println(v.String())
+}
+
+type MyType struct {
+	Value string
+}
+
+func (m MyType) String() string {
+	return m.Value
+}
+
+func main() {
+	data := MyType{Value: "Hello, Go!"}
+	printValue(data) // "Hello, Go!"
+}
+```
+
+### Use Cases
+
+1. **Single-Use Contracts**:
+   - When you need to enforce a specific behavior without defining a reusable interface.
+
+2. **Testing and Mocks**:
+   - Anonymous interfaces can be used to quickly define expectations for mock objects in test scenarios.
+
+3. **Dynamic Function Parameters**:
+   - Functions can accept anonymous interfaces for highly specific behavior without  the codebase with named interfaces.
+
+### Anonymous Interfaces vs. Named Interfaces
+
+| Feature                  | Anonymous Interface          | Named Interface              |
+|--------------------------|------------------------------|------------------------------|
+| **Reusability**          | Cannot be reused elsewhere.  | Can be reused across code.   |
+| **Readability**          | Compact but can be less readable. | Explicit and self-documenting. |
+| **Usage Scope**          | Best for single-use scenarios. | Ideal for shared contracts.  |
+
 ## Empty Interface
 The empty interface, denoted as `interface{}`, is a special interface that doesn't specify any method signatures. It allows you to assign values of any type to it. In a sense, you can think of every type as implicitly implementing the empty interface. There is a built-in alias for empty interface, called `any`.
 
