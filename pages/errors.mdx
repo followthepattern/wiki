@@ -38,10 +38,57 @@ func main() {
 
 ## Built in error functions
 
+### `errors.New`
+
+The `errors.New` function creates a simple error with a static message. It’s part of the standard `errors` package.
+
+```go copy
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+func main() {
+	err := errors.New("something went wrong")
+	fmt.Println(err)
+}
+```
+
+Run this code in your [browser](https://goplay.followthepattern.net/snippet/T0uZBnbex3L) without installation.
+
+Use `errors.New` for simple, static error messages where no dynamic data is needed.
+
+### `fmt.Errorf`
+
+The `fmt.Errorf` function provides more flexibility by allowing formatted error messages, including dynamic values. It’s part of the `fmt` package.
+
+```go copy
+func Errorf(format string, a ...interface{}) error
+```
+
+```go copy
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	userID := 42
+	err := fmt.Errorf("user with ID %d not found", userID)
+	fmt.Println(err)
+}
+```
+Use `fmt.Errorf` when you need dynamic error messages or want to include contextual information.
+
+Run the code without installation [here](https://goplay.followthepattern.net/snippet/VxKlyb2oiUd)
+
 ### `errors.As`
 The `errors.As` function is used to **check if an error or any error in its chain matches a specific type**. This is particularly useful when you need to handle custom error types.
 
-```go
+```go copy
 package main
 
 import (
@@ -74,7 +121,7 @@ Try it in your [browser](https://goplay.followthepattern.net/snippet/xmpizRiozdv
 ### `errors.Is`
 The `errors.Is` function is used to **check if an error is equal to a specific error**, including any error in the chain. It works well for error comparisons where you care about equivalence rather than type.
 
-```go
+```go copy
 package main
 
 import (
@@ -101,7 +148,7 @@ Run this code in your [browser](https://goplay.followthepattern.net/snippet/zonx
 
 The `errors.Wrap` function (from the `github.com/pkg/errors` package) is used to **add context to an error while preserving the original error for later inspection**. Although Go 1.13 introduced `fmt.Errorf` with `%w` for error wrapping, `errors.Wrap` remains popular in some projects.
 
-```go
+```go copy
 package main
 
 import (
