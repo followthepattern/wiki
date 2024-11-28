@@ -36,6 +36,96 @@ func main() {
 
 `CustomError` is a correct implementation of the `error` interface so it can be assigned to the `Error` variable, which type is `error` interface.
 
+## Built in error functions
+
+### `errors.As`
+The `errors.As` function is used to **check if an error or any error in its chain matches a specific type**. This is particularly useful when you need to handle custom error types.
+
+```go
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+type CustomError struct {
+	Msg string
+}
+
+func (e *CustomError) Error() string {
+	return e.Msg
+}
+
+func main() {
+	err := &CustomError{"Something went wrong"}
+	var target *CustomError
+
+	if errors.As(err, &target) {
+		fmt.Println("Custom error detected:", target.Msg)
+	} else {
+		fmt.Println("Unknown error")
+	}
+}
+```
+
+Try it in your [browser](https://goplay.followthepattern.net/snippet/xmpizRiozdv)
+
+### `errors.Is`
+The `errors.Is` function is used to **check if an error is equal to a specific error**, including any error in the chain. It works well for error comparisons where you care about equivalence rather than type.
+
+```go
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+var ErrNotFound = errors.New("not found")
+
+func main() {
+	wrappedErr := fmt.Errorf("operation failed: %w", ErrNotFound)
+
+	if errors.Is(wrappedErr, ErrNotFound) {
+		fmt.Println("The error is 'not found'")
+	} else {
+		fmt.Println("Different error")
+	}
+}
+```
+
+Run this code in your [browser](https://goplay.followthepattern.net/snippet/zonxvBRF7t4)
+
+### `errors.Wrap`
+
+The `errors.Wrap` function (from the `github.com/pkg/errors` package) is used to **add context to an error while preserving the original error for later inspection**. Although Go 1.13 introduced `fmt.Errorf` with `%w` for error wrapping, `errors.Wrap` remains popular in some projects.
+
+```go
+package main
+
+import (
+	"errors"
+	"fmt"
+
+	"github.com/pkg/errors"
+)
+
+func main() {
+	err := errors.New("database connection failed")
+	wrappedErr := errors.Wrap(err, "unable to load user data")
+
+	fmt.Println(wrappedErr) // Prints: unable to load user data: database connection failed
+}
+```
+
+Run the code above in your [browser](https://goplay.followthepattern.net/snippet/iVcie0Yr35b)
+
+For Go 1.13+ projects, you can achieve similar wrapping with `fmt.Errorf`:
+```go
+wrappedErr := fmt.Errorf("unable to load user data: %w", err)
+```
+
 ## Defer
 In a typical Go application, expressions are executed sequentially, one after the other.
 
