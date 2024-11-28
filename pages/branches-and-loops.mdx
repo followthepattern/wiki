@@ -284,3 +284,42 @@ for index, value := range list {
     fmt.Println(index, value)
 }
 ```
+
+# Iterators
+
+Traditionally, Go's `for...range` loop could iterate over arrays, slices, maps, strings, and channels. With Go 1.23, this capability extends to functions that conform to specific signatures, enabling custom iteration behavior. These iterator functions can be defined to produce sequences of values, which the `for...range` loop can consume.
+
+## Defining an Iterator Function
+
+An iterator function in Go 1.23 is a function that takes another function (often called `yield`) as an argument. This `yield` function is invoked for each item in the sequence, and it returns a boolean indicating whether to continue the iteration.
+
+Creating a Simple Iterator Function
+
+```go copy
+package main
+
+import "fmt"
+
+// Iterator function that generates numbers from 0 to n-1
+func generate(n int) func(func(int) bool) {
+    return func(yield func(int) bool) {
+        for i := 0; i < n; i++ {
+            if !yield(i) {
+                return
+            }
+        }
+    }
+}
+
+func main() {
+    // Using the iterator function with for...range
+    for num := range generate(5) {
+        fmt.Println(num)
+    }
+}
+```
+
+Run this in your [browser](https://goplay.followthepattern.net/snippet/DPGgtAvNqkK)
+
+
+One of the main benefit of using iterators that alues are generated on-the-fly, which can lead to performance improvements, especially with large datasets.
