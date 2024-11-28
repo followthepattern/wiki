@@ -202,3 +202,52 @@ func main() {
 The code directly asserts `obj` as a `string` without checking if it's actually of that type. Since `obj` is an empty interface and hasn't been assigned any value, this assertion is incorrect.
 
 You can run the above example [here](https://goplay.followthepattern.net/snippet/hhK5LxatQqx)
+
+
+### Type Assertion with `switch`
+
+While basic type assertions allow you to check a single type, using a `switch` statement with type assertion is a more powerful and cleaner way to handle multiple possible types for an interface.
+
+A `type switch` allows you to handle multiple types that an interface might hold. It evaluates the dynamic type of an interface and executes the corresponding `case` block.
+
+**Syntax**:
+```go
+switch v := i.(type) {
+case string:
+    // Handle string type
+case int:
+    // Handle int type
+default:
+    // Handle unknown types
+}
+```
+
+Here’s an example that demonstrates a `type switch`:
+
+```go copy {6}
+package main
+
+import "fmt"
+
+func printType(i interface{}) {
+    switch v := i.(type) {
+    case string:
+        fmt.Println("It's a string:", v)
+    case int:
+        fmt.Println("It's an int:", v)
+    case bool:
+        fmt.Println("It's a boolean:", v)
+    default:
+        fmt.Println("Unknown type")
+    }
+}
+
+func main() {
+    printType("Hello, Go!")
+    printType(42)
+    printType(true)
+    printType(3.14) // Unknown type
+}
+```
+
+Run this example in your [browser](https://goplay.followthepattern.net/snippet/aQz9LFD7Qx5)
