@@ -261,30 +261,31 @@ Run this code in your [browser](https://goplay.followthepattern.net/snippet/Yyjb
 ## Recover
 `recover` is a built-in function that regains control over a goroutine where a `panic` function was called. `recover` only works within a `defer` block. During normal execution, the `recover` function always returns `nil` and has no other side effects. If a `panic` occurs in the same goroutine where `recover` is called, it captures the error contained within the `panic` and stores it in the `err` variable.
 
-```go copy
+```go copy {13,14,15,16}
 package main
 
 import "fmt"
 
 func main() {
-    fmt.Println("Learn coding")
-    panicker()
-    fmt.Println("Fast!")
+	fmt.Println("Learn coding")
+	panicker()
+	fmt.Println("Fast!")
 }
 
 func panicker() {
-    fmt.Println("it will panic")
-    defer func() {
-        if err := recover(); err != nil {
-            fmt.Println("Error:", err)
-        }
-    }()
-    panic("Fatal error")
-    fmt.Println("end of panicker")
+	fmt.Println("it will panic")
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println("Error:", err)
+		}
+	}()
+	panic("Fatal error")
+	fmt.Println("this won't be printed")
 }
+
 ```
 
-You can run this code [here](https://goplay.followthepattern.net/snippet/knCvkbdh_0n).
+You can run this code [here](https://goplay.followthepattern.net/snippet/eDiXdEDTF7-).
 
 The code snippet above demonstrates how the `recover` function can catch a `panic` for error handling. The `recover` function operates only within a `defer` block, capturing the error passed to it by the `panic` function and storing it in the `err` variable. The "end of panicker" message won't be printed because the execution stops at the `panic` line and continues within the `defer` block. It prints the error and exits the function, but the program execution continues, allowing the `main` function to run without issues.
 
