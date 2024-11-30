@@ -1,5 +1,6 @@
 {
     "file-operations": "File Operations",
+    "data-fetch": "Fetching and Parsing JSON",
     "fmt": "fmt",
     "json": "json",
     "os": "os",

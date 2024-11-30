@@ -1,0 +1,76 @@
+---
+title: HTTP API fetch in Go
+description: Go provides robust support for HTTP operations through its standard net/http package
+---
+
+# Fetching and Parsing JSON
+
+Fetching data from an HTTP endpoint in Go is straightforward and efficient, thanks to the net/http and encoding/json packages.
+Use http.Get for simple GET requests and parse JSON responses into structs with json.NewDecoder.
+For advanced use cases, http.Client provides control over headers, timeouts, and other HTTP methods.
+Always close response bodies with defer and validate status codes to ensure successful requests. With these tools, Go enables fast, reliable, and maintainable HTTP interactions.
+
+This Go program fetches JSON data from a public API, validates the fetched data, and performs a validation.
+```go
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+)
+
+type User struct {
+	ID       int    `json:"id"`
+	Name     string `json:"name"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
+
+func validateUser(user User) error {
+	if user.Name == "" {
+		return fmt.Errorf("validation error: user with ID %d has an empty name", user.ID)
+	}
+	if user.Email == "" {
+		return fmt.Errorf("validation error: user with ID %d has an empty email", user.ID)
+	}
+	return nil
+}
+
+func main() {
+	apiURL := "https://jsonplaceholder.typicode.com/users"
+
+	resp, err := http.Get(apiURL)
+	if err != nil {
+		log.Fatalf("Failed to fetch data: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		log.Fatalf("Unexpected status code: %d", resp.StatusCode)
+	}
+
+	var users []User
+	if err := json.NewDecoder(resp.Body).Decode(&users); err != nil {
+		log.Fatalf("Failed to parse JSON: %v", err)
+	}
+
+	allValid := true
+	for _, user := range users {
+		if err := validateUser(user); err != nil {
+			log.Println(err)
+			allValid = false
+		}
+	}
+
+	if allValid {
+		fmt.Println("✅ All user data passed validation")
+		os.Exit(0) // success
+	} else {
+		fmt.Println("❌ Validation failed for some user data")
+		os.Exit(1) // failure
+	}
+}
+```
