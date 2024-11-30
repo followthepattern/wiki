@@ -9,13 +9,13 @@ Creating, reading, and writing files are common tasks in application development
 
 Golang provides various levels of abstraction to manage file operations. In this section, we focus on methods that are both user-friendly and efficient.
 
-## Creating a File
+## Creating and Writing to a File
 
 Creating a file in Go is straightforward. The `os` package includes a function named `Create`, which is used to create a file. The file path can be either absolute or relative. The function returns a tuple: an `os.File` object, which contains metadata about the created file, and an `error`, which captures any failures that may occur.
 
-Below is a typical example of using the `os.Create` function:
+Below is a typical example of using the `os.Create`, after you can use `Write` or `WriteString` to add content.
 
-```go
+```go copy {9, 18}
 package main
 
 import (
@@ -24,15 +24,26 @@ import (
 )
 
 func main() {
-	_, err := os.Create("./dump.txt") // Create a new file
+	file, err := os.Create("example.txt")
 	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1) // Exit the application while printing the error
+		fmt.Println("Error creating file:", err)
+		return
 	}
+	defer file.Close()
+
+	// Write to the file
+	content := "Hello, Go!"
+	_, err = file.WriteString(content)
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+		return
+	}
+
+	fmt.Println("File written successfully")
 }
 ```
 
-Run the code [here](https://goplay.followthepattern.net/snippet/PVrTq5Gshin).
+Run the code [here](https://goplay.followthepattern.net/snippet/nkXj0eoqTRI).
 
 ## Reading from a File
 
@@ -60,7 +71,7 @@ func main() {
 
 The following example demonstrates a lower-level implementation of file reading. The `Read` function fills a byte array with data from the file, allowing you to specify the length of the array.
 
-```go
+```go copy {16}
 package main
 
 import (
@@ -86,6 +97,8 @@ func main() {
 	fmt.Printf("count: %d characters: %q string: %s", count, text, text) // Print the file content
 }
 ```
+
+Run this code in your [browser](https://goplay.followthepattern.net/snippet/5iTSq54PWlH§), without any installation.
 
 In this example, the application opens a file named `dump.txt` and reads its content into a byte slice named `data`. Note that the length and capacity of the slice are limited to 50, meaning it will read only the first 50 characters into the `data` byte array.
 
@@ -113,3 +126,153 @@ func main() {
 ```
 
 In this example, `os.Stat` is used to retrieve the file's status. If the file does not exist, `os.Stat` returns an error that satisfies `os.IsNotExist`, indicating the absence of the file.
+
+
+## Copying a File
+
+The `io.Copy` function allows you to copy file content from a source to a destination.
+
+```go
+package main
+
+import (
+	"fmt"
+	"io"
+	"os"
+)
+
+func main() {
+	sourceFile, err := os.Open("example.txt")
+	if err != nil {
+		fmt.Println("Error opening source file:", err)
+		return
+	}
+	defer sourceFile.Close()
+
+	destFile, err := os.Create("example_copy.txt")
+	if err != nil {
+		fmt.Println("Error creating destination file:", err)
+		return
+	}
+	defer destFile.Close()
+
+	_, err = io.Copy(destFile, sourceFile)
+	if err != nil {
+		fmt.Println("Error copying file:", err)
+		return
+	}
+
+	fmt.Println("File copied successfully")
+}
+```
+
+---
+
+## Deleting a File
+
+To delete a file, use the `os.Remove` function.
+
+```go
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func main() {
+	err := os.Remove("example_copy.txt")
+	if err != nil {
+		fmt.Println("Error deleting file:", err)
+		return
+	}
+
+	fmt.Println("File deleted successfully")
+}
+```
+
+---
+
+## Opening a File for Reading and Writing
+
+The `os.OpenFile` function allows you to open a file with specific flags and permissions.
+
+```go copy {9}
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func main() {
+	file, err := os.OpenFile("example.txt", os.O_RDWR|os.O_APPEND, 0644)
+	if err != nil {
+		fmt.Println("Error opening file:", err)
+		return
+	}
+	defer file.Close()
+
+	// Append content to the file
+	_, err = file.WriteString("\nAppended text.")
+	if err != nil {
+		fmt.Println("Error writing to file:", err)
+		return
+	}
+
+	fmt.Println("Content appended successfully")
+}
+```
+
+## Renaming or Moving a File
+
+The `os.Rename` function is used to rename or move a file.
+
+```go
+package main
+
+import (
+	"fmt"
+	"os"
+)
+
+func main() {
+	err := os.Rename("example.txt", "renamed_example.txt")
+	if err != nil {
+		fmt.Println("Error renaming file:", err)
+		return
+	}
+
+	fmt.Println("File renamed successfully")
+}
+```
+
+## Working with Directories
+
+You can create, read, and delete directories using similar functions.
+
+```go
+err := os.Mkdir("example_dir", 0755)
+if err != nil {
+	fmt.Println("Error creating directory:", err)
+}
+```
+
+Reading a Directory:
+```go
+files, err := os.ReadDir(".")
+if err != nil {
+	fmt.Println("Error reading directory:", err)
+}
+for _, file := range files {
+	fmt.Println(file.Name())
+}
+```
+
+Deleting a Directory:
+```go
+err := os.Remove("example_dir")
+if err != nil {
+	fmt.Println("Error deleting directory:", err)
+}
+```
