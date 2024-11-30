@@ -1,0 +1,163 @@
+---
+title: Testing
+description: The standard `testing` package provides everything you need for unit testing, benchmarks, and examples
+---
+
+# Testing in Go: A Complete Guide
+
+Go has built-in support for testing, making it easy to write, organize, and execute tests. The standard `testing` package provides everything you need for unit testing, benchmarks, and examples. In this article, we’ll explore how to test Go code effectively, covering basic tests, table-driven testing, mocking, and best practices.
+
+## Basics of Testing in Go
+
+### Creating a Test File
+Test files are named with the `_test.go` suffix. If the source file is `math.go`, the test file should be `math_test.go`.
+
+### Writing a Basic Test
+Each test function should start with `Test` preffix and it should take a single parameter of type `*testing.T`.
+
+```go
+package main
+
+import "testing"
+
+func Add(a, b int) int {
+	return a + b
+}
+
+func TestAdd(t *testing.T) {
+	result := Add(2, 3)
+	expected := 5
+
+	if result != expected {
+		t.Errorf("Add(2, 3) = %d; want %d", result, expected)
+	}
+}
+```
+
+Run the code in your [browser](https://goplay.followthepattern.net/snippet/mZNb0eB0AlZ), without installation.
+
+Execute the following command for running the tests
+
+```bash
+go test ./...
+```
+
+### Testing for Errors
+
+Functions that return errors should be tested to ensure correct error handling.
+
+```go
+func Divide(a, b int) (int, error) {
+	if b == 0 {
+		return 0, fmt.Errorf("division by zero")
+	}
+	return a / b, nil
+}
+
+func TestDivide(t *testing.T) {
+	tests := []struct {
+		a, b        int
+		expected    int
+		expectError bool
+	}{
+		{10, 2, 5, false},
+		{10, 0, 0, true},
+	}
+
+	for _, tt := range tests {
+		result, err := Divide(tt.a, tt.b)
+		if tt.expectError {
+			if err == nil {
+				t.Errorf("expected error but got none")
+			}
+		} else {
+			if err != nil {
+				t.Errorf("unexpected error: %v", err)
+			}
+			if result != tt.expected {
+				t.Errorf("Divide(%d, %d) = %d; want %d", tt.a, tt.b, result, tt.expected)
+			}
+		}
+	}
+}
+```
+
+## Mocking in Go
+
+Mocking is useful for testing interactions with external systems like APIs or databases. Use interfaces to abstract dependencies and create mock implementations for testing.
+
+```go copy {12,18}
+type DataFetcher interface {
+	FetchData() (string, error)
+}
+
+func GetData(fetcher DataFetcher) (string, error) {
+	return fetcher.FetchData()
+}
+
+// Mock implementation
+type MockFetcher struct{}
+
+func (m MockFetcher) FetchData() (string, error) {
+	return "mocked data", nil
+}
+
+func TestGetData(t *testing.T) {
+	mock := MockFetcher{}
+	data, err := GetData(mock)
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if data != "mocked data" {
+		t.Errorf("expected 'mocked data', got %s", data)
+	}
+}
+```
+
+Run this code in your [browser](https://goplay.followthepattern.net/snippet/96T16ZoX6dY)
+
+## Benchmarks in Go
+
+Benchmarking allows you to measure the performance of functions. Benchmark functions start with `Benchmark` and take a `*testing.B` parameter.
+
+```go
+func BenchmarkAdd(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Add(2, 3)
+	}
+}
+```
+
+Run benchmarks:
+```bash
+go test -bench=.
+```
+
+---
+
+## Examples in Go
+
+Go allows you to write example functions that serve as documentation and can also be executed as tests.
+
+```go
+func ExampleAdd() {
+	fmt.Println(Add(2, 3))
+	// Output: 5
+}
+```
+
+Run this code in your [browser](https://goplay.followthepattern.net/snippet/Lr8n5-IBMuj).
+
+
+## Test Coverage
+
+To measure test coverage, use the `-cover` flag:
+```bash
+go test -cover ./...
+```
+
+For detailed coverage output:
+```bash
+go test -coverprofile=coverage.out ./...
+go tool cover -html=coverage.out
+```
