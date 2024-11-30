@@ -1,4 +1,5 @@
 {
+    "file-operations": "File Operations",
     "fmt": "fmt",
     "json": "json",
     "os": "os",
