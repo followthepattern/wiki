@@ -18,6 +18,7 @@
     "title": "Error Handling"
   },
   "errors": "Errors",
+  "panic": "Panic and Recover",
   "-- Interface-Composition": {
     "type": "separator",
     "title": "Interface & Composition"
