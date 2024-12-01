@@ -151,13 +151,48 @@ Run this code in your [browser](https://goplay.followthepattern.net/snippet/Lr8n
 
 ## Test Coverage
 
-To measure test coverage, use the `-cover` flag:
+Test coverage is a measure of how much of your code is executed when your tests run. In Go, the `go test` command provides built-in support for measuring and reporting test coverage, making it easier to ensure your tests cover critical parts of your codebase.
+
+To measure test coverage in Go, use the `-cover` flag with the `go test` command:
+
 ```bash
 go test -cover ./...
 ```
 
-For detailed coverage output:
+**Output**
+```
+ok  	myapp	0.005s	coverage: 85.0% of statements
+```
+
+This output indicates that 85% of your code statements were executed during the tests.
+
+### Generate Detailed Coverage Reports
+
+For more detailed insights, use the `-coverprofile` flag to generate a coverage report
+
 ```bash
 go test -coverprofile=coverage.out ./...
+```
+
+The `coverage.out` file contains detailed information about which lines were covered.
+
+You can then visualize this report in the terminal or as an HTML file.
+
+### Terminal Visualization
+```bash
+go tool cover -func=coverage.out
+```
+
+**Output**
+```
+myapp/main.go:34:	Add		100.0%
+myapp/util.go:12:	Multiply	85.7%
+total:			(statements)	90.0%
+```
+
+### HTML Visualization
+```bash
 go tool cover -html=coverage.out
 ```
+
+This opens an interactive HTML report in your default browser, highlighting covered and uncovered code lines.
