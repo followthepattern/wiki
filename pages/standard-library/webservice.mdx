@@ -1,0 +1,183 @@
+---
+title: Web Service only using Standard Library
+description: standard library makes it easy to build web services without requiring external frameworks
+---
+
+# Web Service only using Go Standard Library
+
+Go (Golang) is well-known for its simplicity and robust standard library, which makes it easy to build web services without requiring external frameworks or libraries,
+which might result smaller binary size and less compilation time.
+
+## Setting Up a Basic HTTP Server
+
+The core of any Go web service is the `net/http` package. The `http.ListenAndServe` function starts an HTTP server.
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "Welcome to the Go web service!")
+	})
+
+	fmt.Println("Starting server on :8080")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		panic(err)
+	}
+}
+```
+
+## Handlers for Different Endpoints
+
+You can create multiple handlers to serve different endpoints.
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	http.HandleFunc("/", homeHandler)
+	http.HandleFunc("/about", aboutHandler)
+
+	fmt.Println("Starting server on :8080")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		panic(err)
+	}
+}
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "This is the homepage.")
+}
+
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "This is the about page.")
+}
+```
+
+Visit `http://localhost:8080` and `http://localhost:8080/about` to see the responses.
+
+## Parsing URL Parameters
+
+To handle dynamic routes or query parameters, use the `r.URL` object.
+
+```go copy {9,11}
+package main
+
+import (
+	"fmt"
+	"net/http"
+)
+
+func queryHandler(w http.ResponseWriter, r *http.Request) {
+	name := r.PathValue("name")
+
+	location := r.URL.Query().Get("location")
+	if name == "" {
+		name = "Guest"
+	}
+	fmt.Fprintf(w, "Hello, %s, from %s!", name, location)
+}
+
+func main() {
+	http.HandleFunc("/greet/{name}", queryHandler)
+
+	fmt.Println("Starting server on :8080")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		panic(err)
+	}
+}
+```
+
+Visit `http://localhost:8080/greet?name=John` to see a personalized greeting.
+
+## Handling JSON Data
+
+To work with JSON data, use the `encoding/json` package for parsing and encoding.
+
+```go copy {21}
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+)
+
+type User struct {
+	Name  string `json:"name"`
+	Email string `json:"email"`
+}
+
+func jsonPostHandler(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var user User
+	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	fmt.Fprintf(w, "Received: %+v\n", user)
+}
+
+func main() {
+	http.HandleFunc("/user", jsonPostHandler)
+
+	fmt.Println("Starting server on :8080")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		panic(err)
+	}
+}
+```
+
+## Middleware for Reusable Logic
+
+Middleware is used to add common functionality like logging or authentication.
+
+It creates a new `ServerMux` type, which is a server multiplexer, which matches the URL of each incoming request against a list of registered patterns and calls the handler for the pattern.
+
+The standard `ListenAndServe` uses the `DefaultServerMux`.
+
+```go copy {20}
+package main
+
+import (
+	"fmt"
+	"net/http"
+)
+
+func homeHandler(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "This is the homepage.")
+}
+
+func loggingMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Printf("Received request: %s %s\n", r.Method, r.URL.Path)
+		next.ServeHTTP(w, r)
+	})
+}
+
+func main() {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", homeHandler)
+
+	wrappedMux := loggingMiddleware(mux)
+
+	fmt.Println("Starting server on :8080")
+	if err := http.ListenAndServe(":8080", wrappedMux); err != nil {
+		panic(err)
+	}
+}
+```

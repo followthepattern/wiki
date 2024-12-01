@@ -49,7 +49,7 @@
     "type": "separator",
     "title": "Testing"
   },
-  "testing": "Testing with standard library",
+  "testing": "Standard Library",
   "ginkgo": "Ginkgo",
   "gomega": "Gomega", 
   "about": {

@@ -1,6 +1,7 @@
 {
     "file-operations": "File Operations",
     "data-fetch": "Fetching and Parsing JSON",
+    "webservice": "Web Service Without Dependencies",
     "fmt": "fmt",
     "json": "json",
     "os": "os",
