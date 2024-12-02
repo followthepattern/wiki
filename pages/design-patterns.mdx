@@ -1,0 +1,296 @@
+# Go Specific Design Patterns
+
+Design patterns are reusable solutions to common software design problems. On this page, we will discuss of design patterns that rely on Go specific features to make the application productive.
+
+## Constructor Pattern
+
+A **constructor** in Go is a function that creates and initializes an instance of a struct. The term "constructor" is borrowed from object-oriented programming (OOP), but Go doesn't have constructors as part of the language syntax (like in Java or C++).
+Instead, constructors in Go are just conventional functions that return a pointer to a struct. It typically named `NewTypeName` (e.g., `NewUser`). Focuses on initializing a single type with its required or default values.
+
+```go copy {10}
+package main
+
+import "fmt"
+
+type User struct {
+	Name  string
+	Email string
+}
+
+func NewUser(name, email string) *User {
+	return &User{Name: name, Email: email}
+}
+
+func main() {
+	user := NewUser("John Doe", "john@example.com")
+	fmt.Println(user)
+}
+```
+
+[Run](https://goplay.followthepattern.net/snippet/CFmpLZaFQkl) this code in your browser.
+
+Use constructors when you want a simple, standard way to initialize a specific type with required parameters.
+
+## Creator Pattern
+
+A **creator** pattern in Go is a more generalized and flexible approach to object creation. It often abstracts the creation logic and can be used to create objects of various types or with more complex initialization requirements.
+This is the main difference between a constructor and a creator function.
+
+```go copy {30}
+package main
+
+import "fmt"
+
+// Product interface for different types of products
+type Product interface {
+	GetDetails() string
+}
+
+// Concrete Product A
+type ProductA struct {
+	Name string
+}
+
+func (p ProductA) GetDetails() string {
+	return "Product A: " + p.Name
+}
+
+// Concrete Product B
+type ProductB struct {
+	Name string
+}
+
+func (p ProductB) GetDetails() string {
+	return "Product B: " + p.Name
+}
+
+// Creator function
+func CreateProduct(productType string, name string) Product {
+	switch productType {
+	case "A":
+		return ProductA{Name: name}
+	case "B":
+		return ProductB{Name: name}
+	default:
+		return nil
+	}
+}
+
+func main() {
+	product := CreateProduct("A", "Gadget")
+	fmt.Println(product.GetDetails())
+}
+```
+
+Run the code above [here](https://goplay.followthepattern.net/snippet/JX5OkJ9OpO4)
+
+Use creator functions when you need more flexible and abstract ways to create objects, especially when creating multiple types or configurations.
+
+## Builder Pattern
+
+The **Builder pattern** is used to construct complex objects step by step. It is particularly useful when a complex object has many optional parameters.
+
+```go copy {47}
+package main
+
+import "fmt"
+
+// Car struct with multiple fields
+type Car struct {
+	Make  string
+	Model string
+	Color string
+	Year  int
+}
+
+// CarBuilder helps construct a Car object
+type CarBuilder struct {
+	car *Car
+}
+
+func NewCarBuilder() *CarBuilder {
+	return &CarBuilder{car: &Car{}}
+}
+
+func (cb *CarBuilder) SetMake(make string) *CarBuilder {
+	cb.car.Make = make
+	return cb
+}
+
+func (cb *CarBuilder) SetModel(model string) *CarBuilder {
+	cb.car.Model = model
+	return cb
+}
+
+func (cb *CarBuilder) SetColor(color string) *CarBuilder {
+	cb.car.Color = color
+	return cb
+}
+
+func (cb *CarBuilder) SetYear(year int) *CarBuilder {
+	cb.car.Year = year
+	return cb
+}
+
+func (cb *CarBuilder) Build() *Car {
+	return cb.car
+}
+
+func main() {
+	car := NewCarBuilder().
+		SetMake("Toyota").
+		SetModel("Corolla").
+		SetColor("Blue").
+		SetYear(2021).
+		Build()
+	fmt.Println(car)
+}
+```
+
+[Try](https://goplay.followthepattern.net/snippet/2hLnBQXSVRK) out the pattern without installation.
+
+It simplifies the construction of complex objects avoiding large constructors with many arguments.
+
+## Option Pattern
+
+The **Option pattern** provides flexibility in object initialization by allowing optional parameters through functional options. This pattern is ideal for cases where a struct has many fields, but most are optional.
+It brings an other solution to the same problem like the builder pattern, but it targets less complex objects.
+
+```go copy {}
+package main
+
+import "fmt"
+
+// Server struct with optional parameters
+type Server struct {
+	Host     string
+	Port     int
+	Protocol string
+	Timeout  int
+}
+
+// Option is a function that modifies the Server
+type Option func(*Server)
+
+// NewServer creates a Server with options
+func NewServer(host string, port int, options ...Option) *Server {
+	server := &Server{
+		Host: host,
+		Port: port,
+	}
+
+	for _, opt := range options {
+		opt(server)
+	}
+
+	return server
+}
+
+// Functional options
+func WithProtocol(protocol string) Option {
+	return func(s *Server) {
+		s.Protocol = protocol
+	}
+}
+
+func WithTimeout(timeout int) Option {
+	return func(s *Server) {
+		s.Timeout = timeout
+	}
+}
+
+func main() {
+	server := NewServer("localhost", 8080, WithProtocol("https"), WithTimeout(30))
+	fmt.Println(server)
+}
+```
+
+It reduces boilerplate code and allows flexibility in configuration without overloading constructors.
+
+
+
+## Enum Pattern
+
+While Go does not have built-in support for enums, you can emulate enums using custom types and constants.
+
+```go copy {9}
+package main
+
+import "fmt"
+
+// LogLevel represents a logging level
+type LogLevel int
+
+const (
+	Debug LogLevel = iota
+	Info
+	Warn
+	Error
+)
+
+func (l LogLevel) String() string {
+	return [...]string{"Debug", "Info", "Warn", "Error"}[l]
+}
+
+func Log(level LogLevel, message string) {
+	fmt.Printf("[%s] %s\n", level, message)
+}
+
+func main() {
+	Log(Info, "Application started")
+	Log(Error, "An error occurred")
+}
+```
+
+Run the code above in your [browser](https://goplay.followthepattern.net/snippet/v2SERnXG46X)
+
+It provides type safety and readable constants. It is easy to expand and maintain
+
+
+
+## Singleton
+Ensures only one instance of a type exists globally
+
+```go copy {7}
+package main
+
+import "sync"
+
+type Singleton struct{}
+
+var instance *Singleton
+var once sync.Once
+
+func GetInstance() *Singleton {
+	once.Do(func() {
+		instance = &Singleton{}
+	})
+	return instance
+}
+```
+
+Run the code above in your [browser](https://goplay.followthepattern.net/snippet/VMW2QaECR5N)
+
+## Strategy
+Encapsulates interchangeable algorithms
+```go copy
+type Strategy interface {
+	Execute() string
+}
+
+type ConcreteStrategyA struct{}
+func (ConcreteStrategyA) Execute() string { return "Strategy A" }
+
+type ConcreteStrategyB struct{}
+func (ConcreteStrategyB) Execute() string { return "Strategy B" }
+
+func main() {
+	var strategy Strategy = ConcreteStrategyA{}
+	fmt.Println(strategy.Execute())
+
+	strategy = ConcreteStrategyB{}
+	fmt.Println(strategy.Execute())
+}
+```
+
+Run the code above in your [browser](https://goplay.followthepattern.net/snippet/vVtqdCH1TZS)
