@@ -51,7 +51,13 @@
   },
   "testing": "Standard Library",
   "ginkgo": "Ginkgo",
-  "gomega": "Gomega", 
+  "gomega": "Gomega",
+  "-- Build & Design": {
+    "type": "separator",
+    "title": "Build & Design"
+  },
+  "design-patterns": "Design Patterns",
+  "database": "Database",
   "about": {
     "title": "About",
     "type": "page"

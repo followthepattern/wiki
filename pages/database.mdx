@@ -1,0 +1,150 @@
+---
+title: Connecting to a Database in Go
+description: Go's standard library and ecosystem provide robust tools for working with databases efficiently and securely.
+---
+
+# Connecting to a Database
+
+Connecting to a database is a fundamental task in many Go applications. Go's standard library and ecosystem provide robust tools for working with databases efficiently and securely.
+
+## `database/sql`
+
+The `database/sql` package in Go provides a generic interface for interacting with SQL databases. Combined with database drivers (e.g., `pq` for PostgreSQL, `mysql` for MySQL),
+it supports multiple databases through drivers, manages connections with a built-in connection pool and provides a consistent API across databases.
+
+### Installing a Database Driver
+
+To use `database/sql`, you need a database driver. Install the driver for your database using `go get`.
+
+PostgreSQL:  
+```bash
+go get github.com/lib/pq
+```
+MySQL:  
+```bash
+go get github.com/go-sql-driver/mysql
+```
+SQLite:  
+```bash
+go get modernc.org/sqlite
+```
+
+### Connecting to the Database
+
+Use the `sql.Open` function to create a database connection. This function does not establish a connection immediately but validates the driver and data source name (DSN).
+
+```go
+package main
+
+import (
+	"database/sql"
+	"fmt"
+	"log"
+
+	_ "github.com/lib/pq" // PostgreSQL driver
+)
+
+func main() {
+	connStr := "user=postgres password=mysecretpassword dbname=mydb sslmode=disable"
+	db, err := sql.Open("postgres", connStr)
+	if err != nil {
+		log.Fatalf("Failed to open database: %v", err)
+	}
+	defer db.Close()
+
+	// Test the connection
+	if err := db.Ping(); err != nil {
+		log.Fatalf("Failed to connect to database: %v", err)
+	}
+
+	fmt.Println("Connected to the database!")
+}
+```
+
+### Executing Queries
+
+The `database/sql` package supports executing SQL queries with methods like `Query`, `QueryRow`, and `Exec`.
+
+#### Running a Query
+```go
+rows, err := db.Query("SELECT id, name FROM users")
+if err != nil {
+	log.Fatalf("Query failed: %v", err)
+}
+defer rows.Close()
+
+for rows.Next() {
+	var id int
+	var name string
+	if err := rows.Scan(&id, &name); err != nil {
+		log.Fatalf("Row scan failed: %v", err)
+	}
+	fmt.Printf("ID: %d, Name: %s\n", id, name)
+}
+```
+
+#### Executing an Update:
+```go
+result, err := db.Exec("UPDATE users SET name = $1 WHERE id = $2", "John Doe", 1)
+if err != nil {
+	log.Fatalf("Update failed: %v", err)
+}
+
+affected, _ := result.RowsAffected()
+fmt.Printf("Rows affected: %d\n", affected)
+```
+
+
+### Using Prepared Statements
+
+Prepared statements improve performance and security by precompiling SQL and preventing SQL injection.
+
+```go
+stmt, err := db.Prepare("INSERT INTO users(name, email) VALUES($1, $2)")
+if err != nil {
+	log.Fatalf("Failed to prepare statement: %v", err)
+}
+defer stmt.Close()
+
+_, err = stmt.Exec("Alice", "alice@example.com")
+if err != nil {
+	log.Fatalf("Insert failed: %v", err)
+}
+
+fmt.Println("User added successfully!")
+```
+
+### Using Transactions
+
+Transactions allow multiple queries to be executed as a single unit of work.
+
+```go
+tx, err := db.Begin()
+if err != nil {
+	log.Fatalf("Failed to begin transaction: %v", err)
+}
+
+_, err = tx.Exec("UPDATE accounts SET balance = balance - $1 WHERE id = $2", 100, 1)
+if err != nil {
+	tx.Rollback()
+	log.Fatalf("Failed to debit account: %v", err)
+}
+
+_, err = tx.Exec("UPDATE accounts SET balance = balance + $1 WHERE id = $2", 100, 2)
+if err != nil {
+	tx.Rollback()
+	log.Fatalf("Failed to credit account: %v", err)
+}
+
+if err := tx.Commit(); err != nil {
+	log.Fatalf("Transaction commit failed: %v", err)
+}
+
+fmt.Println("Transaction completed successfully!")
+```
+
+## SQL Builder
+
+goqu Go SQL builder is my favourite package to dynamically build querries.
+
+https://github.com/doug-martin/goqu
