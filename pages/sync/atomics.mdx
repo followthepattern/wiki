@@ -1,0 +1,128 @@
+# Atomics in Go
+
+**Atomics** in Go are low-level synchronization primitives provided by the `sync/atomic` package. They allow developers to perform operations on shared variables safely without using more complex synchronization mechanisms like locks.
+Atomic operations ensure that a particular operation on a shared variable is performed as a single, indivisible action.
+This eliminates race conditions without the need for locks, making atomic operations faster and more lightweight than traditional synchronization techniques.
+
+## Common Atomic Operations in Go
+
+The `sync/atomic` package provides functions for common atomic operations on integers, unsigned integers, and pointers.
+
+### Load
+Reads the value of an atomic variable safely.
+
+```go copy {10}
+package main
+
+import (
+	"fmt"
+	"sync/atomic"
+)
+
+func main() {
+	var counter int64 = 42
+	value := atomic.LoadInt64(&counter)
+	fmt.Println("Loaded value:", value)
+}
+```
+
+### Store
+Writes a value to an atomic variable safely.
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync/atomic"
+)
+
+func main() {
+	var counter int64
+	atomic.StoreInt64(&counter, 100)
+	fmt.Println("Stored value:", counter)
+}
+```
+
+ 
+
+### Add
+Performs an atomic addition operation, returning the new value.
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync/atomic"
+)
+
+func main() {
+	var counter int64
+	atomic.AddInt64(&counter, 5)
+	fmt.Println("After addition:", counter)
+}
+```
+
+### Compare and Swap (CAS)
+Atomically compares the current value of a variable to an expected value and swaps it with a new value if they match. CAS is a foundational operation for building higher-level synchronization primitives.
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync/atomic"
+)
+
+func main() {
+	var counter int64 = 42
+
+	swapped := atomic.CompareAndSwapInt64(&counter, 42, 100)
+	fmt.Println("Swapped:", swapped, "New value:", counter) // Swapped: true New value: 100
+
+	swapped = atomic.CompareAndSwapInt64(&counter, 50, 200)
+	fmt.Println("Swapped:", swapped, "New value:", counter) // Swapped: false New value: 100
+}
+```
+
+### Swap
+Atomically replaces the current value with a new one and returns the old value.
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync/atomic"
+)
+
+func main() {
+	var counter int64 = 10
+	oldValue := atomic.SwapInt64(&counter, 20)
+	fmt.Println("Old value:", oldValue, "New value:", counter)
+}
+```
+
+## Atomic Operations on Pointers
+
+In addition to integers, Go’s `sync/atomic` package provides functions for atomic operations on pointers. These functions are useful for safely updating references in concurrent programs.
+
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync/atomic"
+)
+
+func main() {
+	var pointer unsafe.Pointer
+	data := "Hello, Atomic!"
+	atomic.StorePointer(&pointer, unsafe.Pointer(&data))
+
+	loaded := atomic.LoadPointer(&pointer)
+	fmt.Println("Loaded value:", *(*string)(loaded))
+}
+```

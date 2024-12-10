@@ -42,8 +42,6 @@
   "channels": "Channels",
   "select": "Select",
   "sync": "Sync package",
-  "waitgroup": "WaitGroup",
-  "mutex": "Mutex",
   "race": "Race",
   "-- Testing": {
     "type": "separator",

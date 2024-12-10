@@ -1,0 +1,5 @@
+{
+    "waitgroup": "WaitGroup",
+    "mutex": "Mutex",
+    "atomics": "Atomics"
+}

@@ -1,6 +1,6 @@
 # What is Concurrency?
 
-**Concurrency** is independently executing processes.
+**Concurrency** is a composition of independently executing processes.
 
 While these processes are often functions, they aren't always. **Concurrency** doesn't inherently imply parallelism because there's no guarantee that these tasks will run simultaneously. For instance, an operating system on a computer with a single processor can manage multiple processes without them being parallel, like with display or input device management.
 
@@ -8,7 +8,7 @@ When multiple processors are available, these independent tasks can be run in pa
 
 Golang provides built-in language features and fundamental types that simplify the development of **concurrent** applications. These tools can be used both succinctly and easily, such as:
 
-- goroutine
-- channel
-- select
-- sync package
+- [Goroutine](/goroutine)
+- [Channel](/channel)
+- [Select](/select)
+- [Sync Package](/sync)
