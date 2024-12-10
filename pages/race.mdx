@@ -8,11 +8,11 @@ The Go CLI comes with a very useful feature: it can detect whether a given progr
 
 Using it is straightforward; you can run the Go CLI with the *-race* flag to detect races:
 
-```bash
+```bash copy
 go run -race main.go
 ```
 
-**Example of a Race Condition Error:**
+Example for a Race Condition Error
 
 ```go copy
 type Counter struct {
