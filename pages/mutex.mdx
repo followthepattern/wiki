@@ -1,6 +1,11 @@
+---
+title: Mutex
+description: You can use mutex to lock a variable that multiple goroutines want to modify concurrently
+---
+
 # Mutex
 
-In a multithreaded application, you may encounter the problem of multiple processess try to modify a variable at the exact same time. This can lead to incorrect behavior, and the phenomenon is known as a **race condition**.
+In a concurrent application, you may encounter the problem of multiple processess try to modify a variable at the exact same time. This can lead to incorrect behavior, and the phenomenon is known as a **race condition**.
 
 You can use `sync.Mutex` to lock a variable that multiple goroutines want to modify concurrently, preventing other goroutine from accessing it for a short period to ensure the modification happens safely. After the necessary changes, you can release the lock, allowing other concurrently running processes to access it again.
 
