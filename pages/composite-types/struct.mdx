@@ -270,6 +270,41 @@ func (u User) GetName() string {
 }
 ```
 
-## Difference between embedding and inheritance
+### Difference between embedding and inheritance
 
 Main difference between embedding and inheritance is that the inner type can't reference the outer type in a method that got defined at the inner type.
+
+## Struct Memory Layout
+
+The memory layout of a struct depends on the order of its fields. The compiler automatically inserts padding to satisfy alignment requirements.
+
+### Optimizing Struct Layout
+Reordering fields in a struct can minimize padding and reduce memory usage. Fields are grouped to minimize padding, resulting in better memory utilization.
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"unsafe"
+)
+
+type Unoptimized struct {
+	A int8
+	B int64
+	C int8
+}
+
+type Optimized struct {
+	B int64
+	A int8
+	C int8
+}
+
+func main() {
+	fmt.Println("Size of Unoptimized struct:", unsafe.Sizeof(Unoptimized{})) // 24 bytes
+	fmt.Println("Size of Optimized struct:", unsafe.Sizeof(Optimized{}))     // 16 bytes
+}
+```
+
+Run the code in your [browser](https://goplay.followthepattern.net/snippet/TCk3kURU4s7)
