@@ -1,0 +1,79 @@
+# Tools
+
+## Visual Studio Code Go Plugin
+"Using the Go extension for Visual Studio Code, you get features like IntelliSense, code navigation, symbol search, testing, debugging and many more"
+
+[learn more](https://code.visualstudio.com/docs/languages/go)
+
+### Golang Lint CI
+Below is a basic example of a golangci-lint configuration file (.golangci.yml) that you can use as a starting point for your Go project.
+This setup includes commonly used linters while keeping the configuration simple and clean.
+```yaml
+# .golangci.yml
+run:
+  timeout: 5m
+  tests: true # Run linters on test files
+
+linters-settings:
+  govet:
+    check-shadowing: true
+
+  gocyclo:
+    min-complexity: 10 # Minimum complexity to report
+
+  ineffassign: # Detects assignments to variables that are never used
+    enabled: true
+
+  staticcheck:
+    checks:
+      - all
+
+  revive:
+    severity: warning # Define custom severity for revive
+
+linters:
+  enable:
+    - govet         # Reports suspicious constructs
+    - staticcheck   # Advanced static analysis
+    - gocyclo       # Reports high complexity functions
+    - gofmt         # Checks for gofmt issues
+    - ineffassign   # Detects ineffective assignments
+    - revive        # Replacement for golint
+  disable:
+    - errcheck      # Disable if you find it too verbose
+    - typecheck     # Disable type checking if it's already done elsewhere
+
+issues:
+  exclude-rules:
+    - path: ".*_test.go" # Exclude rules for test files
+      linters:
+        - gocyclo
+  max-issues-per-linter: 50
+  max-same-issues: 3
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+```
+
+Learn more about golangci-lint [here](https://golangci-lint.run/)
+
+#### Install golangci-lint
+
+Run the following command
+
+```bash
+go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+```
+
+Ensure it’s in your PATH, by running the following command
+
+```bash
+golangci-lint --version
+```
+
+if it is not available, try to run This
+
+```bash
+export PATH=$PATH:$(go env GOPATH)/bin
+```

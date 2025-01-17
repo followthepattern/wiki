@@ -1,10 +1,11 @@
 {
   "index": "Introduction",
-  "-- Golang": {
+  "-- Go": {
     "type": "separator",
-    "title": "Golang"
+    "title": "Go"
   },
   "get-started": "Get Started",
+  "tools": "Tools",
   "-- Basic-Syntax": {
     "type": "separator",
     "title": "Basic & Syntax"
