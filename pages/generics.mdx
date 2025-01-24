@@ -25,7 +25,7 @@ Generics can be used with the following language elements:
 
 ### Func
 
-In Golang, a generic function can work with different types without sacrificing type safety. It allows you to pass a type as a parameter from the caller side, helping you formulate general logic and making your code more flexible and reusable.
+In Go, a generic function can work with different types without sacrificing type safety. It allows you to pass a type as a parameter from the caller side, helping you formulate general logic and making your code more flexible and reusable.
 
 Currently, type parameters can be used in functions but not in methods. In the following code snippet, you can see a generic function called `Search` that searches for an element in a slice of any type based on a given condition. If a match is found, it returns a pointer to the element; otherwise, it returns `nil`.
 
@@ -145,7 +145,7 @@ type Number interface {
 
 ### Constraints package
 Constraints package defines a set of basic constraints that can be useful to everyone.
-https://pkg.go.dev/golang.org/x/exp/constraints
+https://pkg.go.dev/Go.org/x/exp/constraints
 
 #### Complex
 
@@ -180,7 +180,7 @@ package main
 
 import (
 	"fmt"
-	"golang.org/x/exp/constraints"
+	"Go.org/x/exp/constraints"
 )
 
 func Min[T constraints.Ordered](a, b T) T {

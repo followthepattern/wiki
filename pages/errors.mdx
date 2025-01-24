@@ -1,11 +1,11 @@
 ---
 title: Error handling in Go
-description: In Golang errors are not treated as exceptions, and there is no concept of exception throwing.
+description: In Go errors are not treated as exceptions, and there is no concept of exception throwing.
 ---
 
 # Error Handling
 
-In the Go (Golang) programming language, errors are not treated as exceptions, and there is no concept of exception throwing.
+In the Go programming language, errors are not treated as exceptions, and there is no concept of exception throwing.
 
 ## Error Interface
 Error handling is accomplished through the use of the error interface. The occurrence of an error does not necessarily lead to the immediate termination of the program. In contrast to some other languages, where attempting to open a non-existent file would trigger an exception, causing the application to throw an error and terminate if the exception is not caught, Go handles this differently. In Go, such an action does not result in a fatal error; instead, an error object is returned, allowing the developer to decide how to respond to the situation.

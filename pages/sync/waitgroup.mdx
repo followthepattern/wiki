@@ -1,6 +1,6 @@
 # WaitGroup
 
-In concurrent programs, there are situations where you need to wait for the results of multiple independently running processes. In the context of Golang, this often means waiting for multiple **goroutines** to finish. For a single process, you can simply use a "done" **channel**, such as `context.Done`. However, the `sync.WaitGroup` provides an excellent solution for coordinating numerous goroutines.
+In concurrent programs, there are situations where you need to wait for the results of multiple independently running processes. In the context of Go, this often means waiting for multiple **goroutines** to finish. For a single process, you can simply use a "done" **channel**, such as `context.Done`. However, the `sync.WaitGroup` provides an excellent solution for coordinating numerous goroutines.
 
 Essentially, `sync.WaitGroup` is a **concurrent safe** counter that you can use to track how many goroutines have been created and how many have completed.
 

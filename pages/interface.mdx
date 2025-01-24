@@ -1,6 +1,6 @@
 # Interface
 
-In Go (Golang) programming language, an interface is a collection of method signatures with a unique name. You cannot create instances of interfaces, but you can assign values of types that implement the methods defined in the interface. The default value for an interface is `nil` or `nil interface` because you cannot assign any other type's `nil` to it.
+In Go programming language, an interface is a collection of method signatures with a unique name. You cannot create instances of interfaces, but you can assign values of types that implement the methods defined in the interface. The default value for an interface is `nil` or `nil interface` because you cannot assign any other type's `nil` to it.
 
 **General Syntax**
 
@@ -153,7 +153,7 @@ func main() {
 In the above example, the `printValue` function takes an empty interface as a parameter, allowing you to pass values of different types to it.
 
 ### Type assertion
-Type assertion in Golang is a mechanism used to extract the underlying value of an interface variable. It's commonly used when you have a variable of interface type and you need to retrieve its dynamic value.
+Type assertion in Go is a mechanism used to extract the underlying value of an interface variable. It's commonly used when you have a variable of interface type and you need to retrieve its dynamic value.
 
 #### Comma-ok idiom
 When you use `value, ok := obj.(Type)`, if the assertion is true, `ok` becomes true and value gets the underlying value. If the assertion is false, `ok` becomes false and value gets the zero value of the asserted type.

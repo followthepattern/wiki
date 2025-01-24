@@ -1,6 +1,6 @@
 # Select
 
-In the Golang programming language, `select` is a crucial feature for implementing Go's concurrency. It allows a **goroutine** to read from or write to one or more **channels**. It closely resembles the syntax of a `switch` statement. `select` blocks execution until one of the **channel** operations can proceed.
+In the Go programming language, `select` is a crucial feature for implementing Go's concurrency. It allows a **goroutine** to read from or write to one or more **channels**. It closely resembles the syntax of a `switch` statement. `select` blocks execution until one of the **channel** operations can proceed.
 
 When multiple concurrent operations arrive at a `select`, it will choose one arbitrarily, not necessarily the first defined case.
 

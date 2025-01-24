@@ -1,6 +1,6 @@
 # Channels
 
-**Channel** is one of the most important language features in Golang to synchronize concurrent processes. It supports safe communication between **goroutines**, essentially serving as a **queue** for sending data between threads in a predefined order. When data is sent or received via a channel, both the sender and the receiver are synchronized according to the channel's state.
+**Channel** is one of the most important language features in Go to synchronize concurrent processes. It supports safe communication between **goroutines**, essentially serving as a **queue** for sending data between threads in a predefined order. When data is sent or received via a channel, both the sender and the receiver are synchronized according to the channel's state.
 
 Channels are declared using the `chan` keyword. You can initialize a **channel**, using `make`, similar to initializing a `map` or `slice`.
 
@@ -233,7 +233,7 @@ The `ch` variable is a bidirectional *channel*, which is converted into a one-di
 
 ## range
 
-Another useful feature of Golang for controlling concurrent processes is the ability to iterate over *channel* variables, allowing continuous data reading from a specific *channel* until it is closed. To close a *channel*, you should use the `close` function. It's essential to note that once a *channel* is closed, you can no longer send or receive data through it, and attempting to close it again will result in a runtime error.
+Another useful feature of Go for controlling concurrent processes is the ability to iterate over *channel* variables, allowing continuous data reading from a specific *channel* until it is closed. To close a *channel*, you should use the `close` function. It's essential to note that once a *channel* is closed, you can no longer send or receive data through it, and attempting to close it again will result in a runtime error.
 
 ```go copy
 package main
