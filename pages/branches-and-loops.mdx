@@ -323,3 +323,36 @@ Run this in your [browser](https://goplay.followthepattern.net/snippet/DPGgtAvNq
 
 
 One of the main benefit of using iterators that alues are generated on-the-fly, which can lead to performance improvements, especially with large datasets.
+
+## Handling breaks with iterator function
+
+```go
+package main
+
+import "fmt"
+
+// Iterator function that generates numbers from 0 to n-1
+func generate(n int) func(func(int) bool) {
+	return func(yield func(int) bool) {
+		for i := 0; i < n; i++ {
+			if !yield(i) {
+				fmt.Println("break")
+				return
+			}
+		}
+	}
+}
+
+func main() {
+	// Using the iterator function with for...range
+	for num := range generate(5) {
+		fmt.Println("num", num)
+		if num == 3 {
+			break
+		}
+	}
+
+}
+```
+
+Run without installation [here](https://goplay.followthepattern.net/snippet/46RmubhVYka)
