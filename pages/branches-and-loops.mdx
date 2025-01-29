@@ -258,11 +258,30 @@ for {
 
 Implementation example:
 ```go copy
-for {
-    fmt.Println("Follow The Pattern")
-    if rand.Int()%2 == 0 {
-        break
-    }
+package main
+
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
+
+func main() {
+	// Seed with current time
+	rand.Seed(time.Now().UnixNano())
+
+	// Define min and max range
+	min := 10
+	max := 50
+
+	for {
+		// Generate a random number in range [min, max]
+		randomNumber := rand.Intn(max-min+1) + min
+		fmt.Printf("Random number between %d and %d: %d\n", min, max, randomNumber)
+		if randomNumber%2 == 0 {
+			break
+		}
+	}
 }
 ```
 
