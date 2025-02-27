@@ -90,6 +90,33 @@ Use `fmt.Errorf` when you need dynamic error messages or want to include context
 
 Run the code without installation [here](https://goplay.followthepattern.net/snippet/VxKlyb2oiUd)
 
+#### Wrapping errors using `fmt.Errorf`
+
+In Go, error wrapping is a best practice for adding context to errors while preserving the original error message.
+The most common way to wrap errors in Go is by using fmt.Errorf with the %w verb, which preserves the original error.
+
+```go copy
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+func main() {
+	baseErr := errors.New("file not found")
+	wrappedErr := fmt.Errorf("failed to open config: %w", baseErr)
+
+	fmt.Println(wrappedErr)
+
+	// Unwrap the error
+	originalErr := errors.Unwrap(wrappedErr)
+	fmt.Println(originalErr) // Output: file not found
+}
+```
+
+Run the code in your [browser](https://goplay.followthepattern.net/snippet/vTbYUCFKmiT)
+
 ### `errors.As`
 The `errors.As` function is used to **check if an error or any error in its chain matches a specific type**. This is particularly useful when you need to handle custom error types.
 
@@ -177,3 +204,4 @@ For Go 1.13+ projects, you can achieve similar wrapping with `fmt.Errorf`:
 ```go
 wrappedErr := fmt.Errorf("unable to load user data: %w", err)
 ```
+
