@@ -159,9 +159,6 @@ It brings an other solution to the same problem like the builder pattern, but it
 ```go copy {}
 package main
 
-import "fmt"
-
-// Server struct with optional parameters
 type Server struct {
 	Host     string
 	Port     int
@@ -169,10 +166,16 @@ type Server struct {
 	Timeout  int
 }
 
-// Option is a function that modifies the Server
-type Option func(*Server)
+type OptionFunc func(*Server)
 
-// NewServer creates a Server with options
+func (o OptionFunc) apply(server *Server) {
+	o(server)
+}
+
+type Option interface {
+	apply(*Server)
+}
+
 func NewServer(host string, port int, options ...Option) *Server {
 	server := &Server{
 		Host: host,
@@ -180,28 +183,22 @@ func NewServer(host string, port int, options ...Option) *Server {
 	}
 
 	for _, opt := range options {
-		opt(server)
+		opt.apply(server)
 	}
 
 	return server
 }
 
-// Functional options
 func WithProtocol(protocol string) Option {
-	return func(s *Server) {
+	return OptionFunc(func(s *Server) {
 		s.Protocol = protocol
-	}
+	})
 }
 
 func WithTimeout(timeout int) Option {
-	return func(s *Server) {
+	return OptionFunc(func(s *Server) {
 		s.Timeout = timeout
-	}
-}
-
-func main() {
-	server := NewServer("localhost", 8080, WithProtocol("https"), WithTimeout(30))
-	fmt.Println(server)
+	})
 }
 ```
 
