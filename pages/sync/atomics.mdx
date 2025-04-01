@@ -29,7 +29,7 @@ func main() {
 ### Store
 Writes a value to an atomic variable safely.
 
-```go
+```go copy
 package main
 
 import (
@@ -49,17 +49,28 @@ func main() {
 ### Add
 Performs an atomic addition operation, returning the new value.
 
-```go
+```go copy
 package main
 
 import (
 	"fmt"
+	"sync"
 	"sync/atomic"
 )
 
 func main() {
 	var counter int64
 	atomic.AddInt64(&counter, 5)
+	wg := sync.WaitGroup{}
+
+	for i := 0; i < 10; i++ {
+		wg.Add(1)
+		go func() {
+			atomic.AddInt64(&counter, int64(i))
+			wg.Done()
+		}()
+	}
+	wg.Wait()
 	fmt.Println("After addition:", counter)
 }
 ```
@@ -67,7 +78,7 @@ func main() {
 ### Compare and Swap (CAS)
 Atomically compares the current value of a variable to an expected value and swaps it with a new value if they match. CAS is a foundational operation for building higher-level synchronization primitives.
 
-```go
+```go copy
 package main
 
 import (
@@ -89,7 +100,7 @@ func main() {
 ### Swap
 Atomically replaces the current value with a new one and returns the old value.
 
-```go
+```go copy
 package main
 
 import (
@@ -109,7 +120,7 @@ func main() {
 In addition to integers, Go’s `sync/atomic` package provides functions for atomic operations on pointers. These functions are useful for safely updating references in concurrent programs.
 
 
-```go
+```go copy
 package main
 
 import (
