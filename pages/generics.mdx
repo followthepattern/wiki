@@ -58,7 +58,7 @@ func main() {
 }
 ```
 
-You can run the above example [here](https://goplay.followthepattern.net/snippet/ftx4PhhyrL9).
+
 
 ### Struct
 
@@ -92,7 +92,7 @@ func (b *BTree[T]) SetData(value T) {
 }
 ```
 
-You can run the above example [here](https://goplay.followthepattern.net/snippet/0P53C827HbL).
+
 
 ### Interface
 
@@ -131,7 +131,7 @@ func IsEqual[T comparable](a T, b T) bool {
 }
 ```
 
-You can run the above code [here](https://goplay.followthepattern.net/snippet/BSSMSi4ChcH).
+
 
 ### Custom Type Constraints
 
@@ -195,7 +195,7 @@ func main() {
 }
 ```
 
-Run the example [here](https://goplay.followthepattern.net/snippet/teMSeS_OXkp).
+
 #### Signed
 ```
 type Signed interface {
@@ -266,7 +266,7 @@ func main() {
 }
 ```
 
-The above example can be run [here](https://goplay.followthepattern.net/snippet/Lg19SPQz78Z?v=goprev).
+
 
 ### Generic-Based Implementation
 The following code snippet demonstrates a *Stack* implementation using generics. It can be used in a type-agnostic manner.
@@ -338,7 +338,7 @@ func main() {
 
 In the `main` function, the *Stack* data structure works with multiple types. The `T` type parameter has no constraints, allowing any type to be passed to it using the `any` keyword. The `T` type parameter appears in the *Stack* method parameters and in the `New` function, as you need to define that these functions can only accept variables of the type specified when defining the *Stack* type, ensuring that only compatible variables can be provided to the *Stack*.
 
-The above example can be run [here](https://goplay.followthepattern.net/snippet/DlGYnyOry-S?v=goprev).
+
 
 ### Generics and Type Interface
 The `Number` interface is a type constraint that summarizes the types that `T` can accept. In this example, a narrower set of types is defined to illustrate that the `stackString` variable cannot be created because the `string` type does not meet the `Number` constraints. The `Number` interface defines a set of types, and the `|` character functions as a union, indicating that all three types can be provided to the *Stack*.
@@ -399,4 +399,3 @@ func main() {
 }
 ```
 
-The above code example can be run [here](https://goplay.followthepattern.net/snippet/aHBxDxPKPxz?v=goprev).

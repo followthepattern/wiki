@@ -1,7 +1,7 @@
 # Primitive Types
 The Go programming language features a variety of primitive types, often referred to as predeclared types. Similar types can be found in other languages, such as `boolean`, `integer`, `float`, and `string`.
 
-Some [examples](https://goplay.followthepattern.net/snippet/2nv-xez21aT).
+
 
 ## Boolean
 The boolean type, which takes logical values, has only two possible values: `true` and `false`. For instance, conditions in `if` and `for` statements are logical values, and the `==` and `<` comparison operators also yield logical values.
@@ -10,7 +10,7 @@ The boolean type, which takes logical values, has only two possible values: `tru
 | - | - | - | - |
 | `bool` | boolean type | `false` | isVisible := true
 
-For more examples about boolean types, see [here](https://goplay.followthepattern.net/snippet/6pwVMW2tpGa).
+
 
 ## Numeric Types
 Go provides several numeric data types for programmers to work with, allowing storage of integers and floating-point numbers of varying sizes and precision, facilitating flexible handling of numeric data.
@@ -33,7 +33,7 @@ Go provides several numeric data types for programmers to work with, allowing st
 | `complex64` | complex number, equivalent to two `float32` values | `(0+0i)` | index := complex(32.3, 18.9)
 | `complex128` | complex number, equivalent to two `float64` values | `(0+0i)` | index := complex(128.2323823, 1238.2829932)
 
-For more [examples](https://goplay.followthepattern.net/snippet/cQZT4nMzI69).
+
 
 ## String
 
@@ -46,7 +46,7 @@ Since a `string` is a sequence of consecutive characters, you have the ability t
 | `rune` | alias for `uint32`, fully equivalent | `0` | var index rune = 4294967295
 | `string` | character string type, convertible to `[]byte` | `""` | text := "hello"
 
-Further examples [here](https://goplay.followthepattern.net/snippet/LpcjgRe02Vc).
+
 
 Using special characters in Go
 ```go copy
@@ -79,13 +79,13 @@ func main() {
 	fmt.Println("Memory for rune array:", len(runes)*int(unsafe.Sizeof(runes[0]))) // Output: 8
 }
 ```
-Try out the code in your [browser](https://goplay.followthepattern.net/snippet/eQu9iNHfVYA)
+
 
 ## Constants
 
 Constants are expressions assigned with specific values. These are evaluated at compile time, not at runtime. To declare a constant, one assigns a value to a name using the const keyword. The fixed nature of their values ensures they cannot be accidentally reassigned during runtime.
 
-Example [here](https://goplay.followthepattern.net/snippet/8B2V4MYQ3uN).
+
 
 ## Literals
 In Go, literals are the constant values assigned directly in the code. They are used to represent fixed values of various data types such as numbers, strings, booleans, or complex types. Literals are essential for defining values during initialization and for simple calculations.
@@ -104,7 +104,7 @@ func main() {
     fmt.Println(dec, oct, hex, bin)
 }
 ```
-Try out the code in your browser [here](https://goplay.followthepattern.net/snippet/b6QSwm1uft9).
+
 
 ## Special Type
 `uintptr` is an **unsigned integer type** in Go that is used to store the memory address of an object. It is primarily used for **low-level memory operations** and is often associated with working with the Go runtime, operating system calls, or interacting with unsafe pointers.
@@ -138,4 +138,3 @@ func main() {
 }
 ```
 
-Try out the code from the browser [here](https://goplay.followthepattern.net/snippet/kd-MxruryYI).

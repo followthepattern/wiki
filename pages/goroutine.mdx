@@ -53,6 +53,6 @@ func print(s string) {
 	}
 }
 ```
-You can run the above example [here](https://goplay.followthepattern.net/snippet/OXfiPin1iwa?v=goprev).
+
 
 Since the `Sleep` function is called on both threads, the `fmt.Println` function within the **goroutine** has enough time to print the text. After multiple runs, notice that the values are not always printed in the same order. This is because the **go scheduler** runs the **goroutines** in different sequences.

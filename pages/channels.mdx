@@ -39,7 +39,7 @@ func main() {
 }
 ```
 
-You can run the above code [here](https://goplay.followthepattern.net/snippet/p2dfmA_yv3p?v=goprev).
+
 
 The `ch` *channel* will block the involved goroutines until the respective goroutine plans to use the channel for communication. By default, the channel does not have memory, so all sent data must be read on the receiving end, or else it won't unblock.
 
@@ -59,7 +59,7 @@ func main() {
 }
 ```
 
-You can run the above code [here](https://goplay.followthepattern.net/snippet/2ZI1F0Ckyxx?v=goprev).
+
 
 If not all data is read, a `lock` occurs, as seen in the example below. The main goroutine sends only two values, but the secondary goroutine plans to read further.
 
@@ -87,7 +87,7 @@ func main() {
 }
 ```
 
-You can run the above code [here](https://goplay.followthepattern.net/snippet/ffg9WyKAQqx?v=goprev).
+
 
 If the `lock` occurs in the secondary goroutine, the application might terminate before the deadlock.
 
@@ -115,7 +115,7 @@ func main() {
 }
 ```
 
-You can run the above code [here](https://goplay.followthepattern.net/snippet/fPq2f_sNoIb?v=goprev).
+
 
 ## Buffered Channels
 A *buffered channel* is a channel with storage capacity. It works similarly to the default *unbuffered channel* but with the difference that the sender does not have to wait for the data sent to be read on the receiving end until the *channel*'s capacity is filled. The way to create it is similar to creating an `array` type, and you also need to use the built-in `make` function.
@@ -149,7 +149,7 @@ func main() {
 }
 ```
 
-You can run the above example [here](https://goplay.followthepattern.net/snippet/IK7_iAZdbR1?v=goprev).
+
 
 However, just because this code snippet won't terminate with an error doesn't mean it's a good design. Not only does data remain unprocessed, but further data sending can still trigger a `deadlock` if it exceeds the *channel*'s capacity. The following code snippet illustrates this scenario:
 
@@ -174,7 +174,7 @@ func main() {
 }
 ```
 
-You can run the above code [here](https://goplay.followthepattern.net/snippet/B4gEIaWpH8d?v=goprev).
+
 
 ## Directional Channels
 The direction of a *channel* can also be specified, making the program safer, as at a given point, the application can either send data or only read data from the *channel* variable. Incorrect data transmission in the wrong direction is not allowed by the compiler, making development more efficient.
@@ -227,7 +227,7 @@ func messageSender(ch chan<- string) {
 }
 ```
 
-You can run the above example [here](https://goplay.followthepattern.net/snippet/LhNsQrc5Net?v=goprev).
+
 
 The `ch` variable is a bidirectional *channel*, which is converted into a one-directional channel when passed to the `messageConsumer` and `messageSender` functions. In the `messageConsumer` function, you cannot send data through the `ch` variable, while in the `messageSender` function, you cannot read values from it.
 
@@ -260,7 +260,7 @@ func sender(ch chan<- int) {
 }
 ```
 
-You can run the above example [here](https://goplay.followthepattern.net/snippet/1g5qTWhEtW9?v=goprev).
+
 
 In the above example, the `sender` function, running on a *goroutine*, sends values through the `ch` variable using a loop. On the main thread, an iteration occurs over the `ch` channel, printing each value. The last printed value will be the one sent by the loop. After that, the `sender` function takes care of closing the channel, which signals the end of the iteration, and the application terminates without errors.
 
@@ -287,7 +287,7 @@ func main() {
 }
 ```
 
-You can run the above code [here](https://goplay.followthepattern.net/snippet/re61AlfBhVv?v=goprev).
+
 
 As a general rule, it's advisable for the party sending data to close the *channel*. Closing a *channel* should be done carefully, as working with a closed *channel* can lead to errors. Multiple closures or reading/writing after closure can result in runtime panics.
 
@@ -319,7 +319,7 @@ func sender(ch chan<- int) {
 }
 ```
 
-You can run the above code [here](https://goplay.followthepattern.net/snippet/tFXOpnWPkZ9?v=goprev).
+
 
 In the following code snippet, it attempts to send a value on a closed *channel*, which results in a panic and application termination:
 
@@ -353,7 +353,7 @@ func sender(ch chan<- int, done chan struct{}) {
 }
 ```
 
-You can run the above code [here](https://goplay.followthepattern.net/snippet/gNcOGT3CgtU?v=goprev).
+
 
 ## How Channels Work
 *Channels* can have various states, and different states can lead to different behaviors during reading, writing, or closing a *channel*. The following table summarizes these states:

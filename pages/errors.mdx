@@ -61,7 +61,7 @@ func main() {
 }
 ```
 
-Run this code in your [browser](https://goplay.followthepattern.net/snippet/T0uZBnbex3L) without installation.
+
 
 Use `errors.New` for simple, static error messages where no dynamic data is needed.
 
@@ -88,7 +88,7 @@ func main() {
 ```
 Use `fmt.Errorf` when you need dynamic error messages or want to include contextual information.
 
-Run the code without installation [here](https://goplay.followthepattern.net/snippet/VxKlyb2oiUd)
+
 
 #### Wrapping errors using `fmt.Errorf`
 
@@ -115,7 +115,7 @@ func main() {
 }
 ```
 
-Run the code in your [browser](https://goplay.followthepattern.net/snippet/vTbYUCFKmiT)
+
 
 ### `errors.As`
 The `errors.As` function is used to **check if an error or any error in its chain matches a specific type**. This is particularly useful when you need to handle custom error types.
@@ -148,7 +148,7 @@ func main() {
 }
 ```
 
-Try it in your [browser](https://goplay.followthepattern.net/snippet/xmpizRiozdv)
+
 
 ### `errors.Is`
 The `errors.Is` function is used to **check if an error is equal to a specific error**, including any error in the chain. It works well for error comparisons where you care about equivalence rather than type.
@@ -174,7 +174,7 @@ func main() {
 }
 ```
 
-Run this code in your [browser](https://goplay.followthepattern.net/snippet/zonxvBRF7t4)
+
 
 ### `errors.Wrap`
 
@@ -198,7 +198,7 @@ func main() {
 }
 ```
 
-Run the code above in your [browser](https://goplay.followthepattern.net/snippet/iVcie0Yr35b)
+
 
 For Go 1.13+ projects, you can achieve similar wrapping with `fmt.Errorf`:
 ```go
