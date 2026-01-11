@@ -42,6 +42,7 @@
   "goroutine": "Goroutine",
   "channels": "Channels",
   "select": "Select",
+  "concurrency-design-patterns": "Concurrency Design Patterns",
   "sync": "Sync package",
   "race": "Race",
   "-- Testing": {

@@ -1,0 +1,157 @@
+---
+title: Concurrency Design Patterns
+description: Popular design patterns for concurrency in Go programming language
+---
+
+# Concurrency Design Patterns
+
+## Fan - In
+
+```go copy
+package main
+
+import "fmt"
+
+func main() {
+	chOut := make(chan int)
+	chIn1 := make(chan int)
+	chIn2 := make(chan int)
+	chIn3 := make(chan int)
+
+	go func() {
+		chIn1 <- 1
+	}()
+
+	go func() {
+		chIn2 <- 2
+	}()
+
+	go func() {
+		chIn3 <- 3
+	}()
+
+	fanIn(chIn1, chIn2, chIn3, chOut)
+
+	fmt.Println("1", <-chOut)
+	fmt.Println("2", <-chOut)
+	fmt.Println("3", <-chOut)
+
+}
+
+func fanIn(ina, inb, inc <-chan int, out chan<- int) {
+	go func() {
+		for {
+			select {
+			case v := <-ina:
+				out <- v
+			case v := <-inb:
+				out <- v
+			case v := <-inc:
+				out <- v
+			}
+		}
+	}()
+}
+```
+
+## Fan - Out
+
+```go copy
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	chIn := make(chan int)
+	chOutA := make(chan int)
+	chOutB := make(chan int)
+	chOutC := make(chan int)
+
+	go func() {
+		chIn <- 1
+	}()
+
+	fanOut(chIn, chOutA, chOutB, chOutC)
+
+	select {
+	case v := <-chOutA:
+		fmt.Println("a", v)
+	case v := <-chOutB:
+		fmt.Println("b", v)
+	case v := <-chOutC:
+		fmt.Println("c", v)
+	}
+
+}
+
+func fanOut(in <-chan int, outa, outb, outc chan<- int) {
+	go func() {
+		v := <-in
+		select {
+		case outa <- v:
+		case outb <- v:
+		case outc <- v:
+		}
+
+	}()
+}
+```
+
+## Time out
+
+```go copy
+package main
+
+import (
+	"fmt"
+	"time"
+)
+
+func main() {
+	ch := make(chan int)
+
+	go func() {
+		time.Sleep(time.Second * 5)
+		ch <- 1
+	}()
+
+	select {
+	case <-time.After(time.Second * 2):
+		fmt.Println("timed out")
+	case v := <-ch:
+		fmt.Println("received value", v)
+	}
+}
+```
+
+## Generator pattern
+
+```go
+package main
+
+import (
+	"fmt"
+)
+
+func main() {
+	ch := generate()
+
+	for v := range ch {
+		fmt.Println("v", v)
+	}
+}
+
+func generate() chan int {
+	ch := make(chan int)
+	go func() {
+		for i := range 10 {
+			ch <- i
+		}
+		close(ch)
+	}()
+
+	return ch
+}
+```
